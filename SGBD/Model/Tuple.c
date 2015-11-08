@@ -71,66 +71,25 @@ int addIntData (Tuple *t, int value)
 	return 1;
 }
 
-int removeStrData ( Tuple *t , char* value )
+int removeData ( Tuple *t, unsigned int index )
 {
 	int i;
 
-	for ( i = 0; i < t->nb_datas; i++ )
-	{
-		// Check if the type is corresponding with value researched
-		// In this case, check if the values are equal, then delete it
-		if ( ! strcmp( (*(t->datas + i))->type , STR ) )
-			if ( ! strcmp ( (*(t->datas + i) )->value.str , value ) )
-			{
-				int j;
+	// Check if t is not NULL and index is not out of array
+	if ( t == NULL && t->size <= index )
+		return 0;
 
-				// Delete the data
-				deleteData ( t->datas[i] );
+	// Free the data into the array at the specified array
+	free( (t->datas + index) );
 
-				// decale the oter data
-				for (j = i; j < t->size - 1; j++)
-					t->datas[j] = t->datas[j + 1];
+	// move data in the previous slot
+	for ( i = index; i < t->size - 1; i++ )
+		*(t->datas + i) = *(t->datas + i + 1);
 
-				t->nb_datas--;
+	// resize the size of array
+	realloc( t->datas, --t->size );
 
-				// Resize the tuple
-				t->datas = realloc( t->datas , --t->size );
-
-				return 1;
-			}
-	}
-	return 0;
-}
-
-int removeIntData ( Tuple *t, int value)
-{
-	int i;
-
-	for ( i = 0; i < t->nb_datas; i++ )
-	{
-		// Check if the type is corresponding with value researched
-		// In this case, check if the values are equal, then delete it
-		if ( ! strcmp( (*(t->datas + i))->type , INT ) )
-			if ( t->datas[i]->value.integer == value )
-			{
-				int j;
-
-				// Delete the data
-				deleteData ( t->datas[i] );
-
-				// Decale the other data
-				for (j = i; j < t->size - 1; j++)
-					t->datas[j] = t->datas[j + 1];
-
-				t->nb_datas--;
-
-				// Resize the tuple
-				t->datas = realloc( t->datas , --(t->size) );
-
-				return 1;
-			}
-	}
-	return 0;
+	return 1;
 }
 
 void deleteTuple ( Tuple *t )

@@ -29,7 +29,7 @@ int main()
 		assert(! strcmp( (*(monTuple->datas + 1))->value.str, STR_DATA));
 		assert(! strcmp( (*(monTuple->datas + 2))->value.str, MORE_DATA));
 
-		assert(removeIntData(monTuple, INT_DATA));
+		assert(removeData(monTuple, 0));
 		assert(monTuple->size == 2);
 		assert(monTuple->nb_datas == 2);
 
