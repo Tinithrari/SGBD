@@ -17,13 +17,13 @@ int main()
 
 	if (monTuple != NULL)
 	{
-		assert(addIntData(monTuple, INT_DATA));
-		assert(addStrData(monTuple, STR_DATA));
+		assert( addData( monTuple, createData(INT, INT_DATA ) ) );
+		assert( addData( monTuple, createData(STR, STR_DATA ) ) );
 
 		assert(monTuple->nb_datas == 2);
 		assert(monTuple->size == 2);
 
-		assert(addStrData(monTuple, MORE_DATA));
+		assert(addData(monTuple, createData( STR, MORE_DATA ) ) );
 
 		assert((*(monTuple->datas))->value.integer == INT_DATA);
 		assert(! strcmp( (*(monTuple->datas + 1))->value.str, STR_DATA));
