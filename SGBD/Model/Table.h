@@ -1,15 +1,17 @@
 typedef struct
 {
-  char *nom;
+  char *name;
   Column **columns;
   Tuple **tuples;
 
-  int nb_column;
-  int nb_tuple;
+  int nbColumn;
+  int nbTuple;
 } Table;
 
-int addColumn		(Column *column);
-int addTuple		(Tuple *tuple);
+Table *createTable	(char *name);
 
-void deleteTable	(Table *table);
-void deleteColumn	(char *name);
+int addColumn		(Table *table, Column *column);
+int addTuple		(Table* table, Tuple *tuple);
+
+int deleteColumn	(Table *table, char *name);
+int deleteTable		(Table *table);

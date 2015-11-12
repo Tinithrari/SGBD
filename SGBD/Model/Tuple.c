@@ -31,7 +31,8 @@ int addData ( Tuple *t , Data* data )
 
 	// Check the capacity of tuple and resize it if needed
 	if ( t->nb_datas == t->size )
-		t->datas = realloc( t->datas , ++t->size );
+		if ( realloc( t->datas , ++t->size * sizeof( Data* ) ) == NULL)
+			return 0;
 
 	// Add the data into the tuple and increment the number of data
 	*(t->datas + t->nb_datas) = data;
@@ -50,14 +51,15 @@ int removeData ( Tuple *t, unsigned int index )
 		return 0;
 
 	// Free the data into the array at the specified array
-	free( (t->datas + index) );
+	free( *(t->datas + index) );
 
 	// move data in the previous slot
 	for ( i = index; i < t->size - 1; i++ )
 		*(t->datas + i) = *(t->datas + i + 1);
 
 	// resize the size of array
-	realloc( t->datas, --t->size );
+	if ( realloc( t->datas, --t->size ) == NULL )
+		return 0;
 
 	return 1;
 }
@@ -75,6 +77,7 @@ void deleteTuple ( Tuple *t )
 		deleteData(*(t->datas + i));
 
 	// free the tuple
+	free(t->datas);
 	free(t);
 }
 

@@ -4,5 +4,5 @@ typedef struct
 	char* type;
 } Column;
 
-Column *createColumn(char *name, char *type);
-void deleteColumn	(Column *col);
+Column *createColumn	(char *name, char *type);
+void deleteColumn		(Column *col);

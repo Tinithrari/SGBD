@@ -4,7 +4,7 @@
 
 #include "Column.h"
 
-Column *createColumn(char *name, char *type)
+Column *createColumn(char *name, DataType type)
 {
 	Column *col;
 
@@ -22,9 +22,12 @@ Column *createColumn(char *name, char *type)
 	if (col == NULL)
 		return NULL;
 
-	// Allocate two char table, which has a length of the length of the corresponding parameter + 1 
-	col->name = calloc ( strlen ( name ) + 1 , sizeof ( char ) );
-	col->type = calloc ( strlen ( type ) + 1 , sizeof ( char ) );
+	// Allocate one char table, which has a length of the length of the corresponding parameter + 1
+	// if it fails, return NULL
+	if ( ( col->name = calloc ( strlen ( name ) + 1 , sizeof ( char ) ) ) == NULL )
+		return NULL;
+
+	col->type = type;
 
 	// Copy the contains of the parameter in the field of Column struct
 	strcpy ( col->name , name );
@@ -35,10 +38,7 @@ Column *createColumn(char *name, char *type)
 
 void deleteColumn(Column *col)
 {
-	// Delete the name and the type of the column
+	// Delete the name and the column
 	free ( col->name );
-	free ( col->type );
-
-	// Delete the column
 	free ( col );
 }
