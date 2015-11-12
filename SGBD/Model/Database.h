@@ -1,4 +1,4 @@
-typedef struct database
+typedef struct
 {
   Table **table;
   int nb_table;
@@ -6,7 +6,7 @@ typedef struct database
 
 Database *createDatabase();
 
-int addTable(Table* table);
-void deleteTable(Table* table);
+int addTable			(Table* table);
+void deleteTable		(Table* table);
 
-void deleteDatabase(Database *db);
+void deleteDatabase		(Database *db);

@@ -22,18 +22,11 @@ Tuple *createTuple ( unsigned int size )
 	return t;
 }
 
-int addStrData ( Tuple *t , char* value )
+int addData ( Tuple *t , Data* data )
 {
-	Data* d;
 
-	// If the tuple is NULL, return false
-	if ( t == NULL )
-		return 0;
-
-	d = createStrData(value);
-
-	// if the data has not been allocated then return NULL
-	if ( d == NULL )
+	// If the tuple or the data are NULL, return false
+	if ( t == NULL  || data == NULL )
 		return 0;
 
 	// Check the capacity of tuple and resize it if needed
@@ -41,35 +34,12 @@ int addStrData ( Tuple *t , char* value )
 		t->datas = realloc( t->datas , ++t->size );
 
 	// Add the data into the tuple and increment the number of data
-	*(t->datas + t->nb_datas) = d;
+	*(t->datas + t->nb_datas) = data;
 	t->nb_datas++;
 
 	return 1;
 }
 
-int addIntData (Tuple *t, int value)
-{
-	Data* d;
-
-	// If the tuple is NULL
-	if (d == NULL)
-		return 0;
-
-	d = createIntData(value);
-
-	// If the data is not allocated, return false
-	if ( d == NULL )
-		return 0;
-
-	// Check the capacity of tuple and resize it if needed
-	if ( t->nb_datas == t->size )
-		t->datas = realloc( t->datas , ++t->size );
-
-	*(t->datas + t->nb_datas) = d;
-	t->nb_datas++;
-
-	return 1;
-}
 
 int removeData ( Tuple *t, unsigned int index )
 {
@@ -106,4 +76,13 @@ void deleteTuple ( Tuple *t )
 
 	// free the tuple
 	free(t);
+}
+
+Data *getDataByIndex( Tuple *tuple, unsigned int index )
+{
+	// If the tuple is NULL or the index is out of array
+	if (tuple == NULL || tuple->nb_datas < index )
+		return NULL;
+
+	return *(tuple->datas + index);
 }

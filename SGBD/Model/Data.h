@@ -1,18 +1,16 @@
-#define STR "str"
-#define INT "int"
+typedef enum {INT, STR} DataType;
 
-typedef union dataType
+typedef union
 {
   int integer;
   char* str;
-} DataType;
+} DataValue;
 
-typedef struct data
+typedef struct
 {
-  char* type;
-  DataType value;
+  DataType type;
+  DataValue value;
 } Data;
 
-Data *createStrData(char *str);
-Data *createIntData(int integer);
-void deleteData(Data* data);
+Data *createData	( DataType type, DataValue value );
+void deleteData		( Data *data );

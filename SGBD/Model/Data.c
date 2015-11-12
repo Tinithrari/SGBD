@@ -4,39 +4,12 @@
 
 #include "Data.h"
 
-Data *createStrData(char* str)
-{
-
-	Data *data;
-   /*
-	* Check if the string is NULL
-	* In this case, send an error message on the standard error output
-	* And return NULL
-	*/
-	if (str == NULL)
-	{
-		fprintf(stderr, "Error : string not specified");
-		return NULL;
-	}
-
-	// Dynamic allocation of a data structure
-	data = (Data *) malloc(sizeof(Data));
-
-	// Check if the struct is not allocated, return NULL in this case
-	if (data == NULL)
-		return NULL;
-
-	// Fill the data structure
-	data->value.str = calloc( strlen(str) + 1 , sizeof(char) );
-	strcpy(data->value.str, str);
-	data->type = STR;
-
-	return data;
-}
-
-Data *createIntData(int integer)
+Data *createData(DataType type, DataValue value)
 {
 	Data *data;
+
+	if (type == STR && value.str == NULL)
+		return NULL;
 
 	// Dynamic allocation of a data structure
 	data = (Data *) malloc(sizeof(Data));
@@ -45,20 +18,24 @@ Data *createIntData(int integer)
 	if (data == NULL)
 		return NULL;
 
-	// Fill the data structure
-	data->value.integer = integer;
-	data->type = INT;
+	// Put the value into the data
+	if (type == STR)
+		data->value.str = value.str;
+	else
+		data->value.integer = value.integer;
+
+	data->type = type;
 
 	return data;
 }
 
 void deleteData(Data *data)
 {
-// If data is NULL, do nothing
+	// If data is NULL, do nothing
 	if (data == NULL)
 		return;
 
-	if (! strcmp(data->type, STR))
+	if (data->type == STR)
 		free(data->value.str);
 
 	free(data);

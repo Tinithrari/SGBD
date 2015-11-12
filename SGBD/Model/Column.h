@@ -1,8 +1,8 @@
-typedef struct column
+typedef struct
 {
 	char* name;
 	char* type;
 } Column;
 
 Column *createColumn(char *name, char *type);
-void deleteColumn(Column *col);
+void deleteColumn	(Column *col);

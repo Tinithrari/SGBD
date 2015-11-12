@@ -12,5 +12,5 @@ debug:
 	gcc -DDEBUG -c Model/Data.c Model/Column.c Model/Tuple.c
 
 clean:
-	rm *.o
-	rm DataTest
+	del *.o
+	del *.exe

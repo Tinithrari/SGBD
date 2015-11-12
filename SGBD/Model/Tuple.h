@@ -1,4 +1,4 @@
-typedef struct tuple
+typedef struct
 {
   
   Data** datas;
@@ -7,11 +7,10 @@ typedef struct tuple
   
 } Tuple;
 
-Tuple *createTuple ( unsigned int size );
+Tuple *createTuple 	( unsigned int size );
 
-int addStrData ( Tuple *t , char* value );
-int addIntData ( Tuple *t , int value );
+int addData			( Data *data );
+Data *getDataByIndex( Tuple *t, int index );
+int removeData 		( Tuple *t, unsigned int index );
 
-int removeData ( Tuple *t, unsigned int index );
-
-void deleteTuple ( Tuple *tuple );
+void deleteTuple 	( Tuple *tuple );

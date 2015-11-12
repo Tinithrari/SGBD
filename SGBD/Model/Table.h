@@ -1,4 +1,4 @@
-typedef struct table
+typedef struct
 {
   char *nom;
   Column **columns;
@@ -8,8 +8,8 @@ typedef struct table
   int nb_tuple;
 } Table;
 
-bool addColumn(char *name, char* type);
-bool addTuple();
+int addColumn		(Column *column);
+int addTuple		(Tuple *tuple);
 
-void deleteTable(Table *table);
-void deleteColumn(char *name);
+void deleteTable	(Table *table);
+void deleteColumn	(char *name);
