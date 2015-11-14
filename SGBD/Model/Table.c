@@ -28,7 +28,7 @@ Table *createTable ( char *name )
 int addColumn ( Table *table, Column *column )
 {
 	// Check if the table and the column exist, return 0 if not exist
-	if (table == NULL && column == NULL)
+	if (table == NULL || column == NULL)
 		return 0;
 
 	// Reallocation or allocation of memory to add the column, if it fails, return 0
@@ -44,7 +44,7 @@ int addColumn ( Table *table, Column *column )
 int addTuple ( Table *table, Tuple *tuple )
 {
 	// Check if the table and the tuple exist, return 0 if they not
-	if (table == NULL && tuple == NULL)
+	if (table == NULL || tuple == NULL)
 		return 0;
 
 	// Check if there are enough column to add a tuple
@@ -65,7 +65,7 @@ static int getColumnIndex ( Table *table, char *name )
 	int index;
 
 	// Check if the table and the name are NULL, return -1 in this case
-	if (table == NULL && name == NULL)
+	if (table == NULL || name == NULL)
 		return -1;
 
 	// Browse the array of column and return the index if it found the name of the column
@@ -82,7 +82,7 @@ Column *getColumn ( Table *table, char *name )
 	int index;
 
 	// Check if the table and the name are NULL, return NULL in this case
-	if (table == NULL && name == NULL)
+	if (table == NULL || name == NULL)
 			return NULL;
 
 	// Browse the array of column and return the column if it the name of the column has been found
@@ -99,7 +99,7 @@ int removeColumn ( Table *table, char *name )
 	int indexOfColumn, indexOfTuple;
 
 	// If the name is NULL or the column doesn't exists, or the table has no column, return 0
-	if ( name == NULL && table->columns == NULL && ( indexOfColumn = getColumnIndex(name) ) == -1 )
+	if ( name == NULL || table == NULL || table->columns == NULL || ( indexOfColumn = getColumnIndex(name) ) == -1 )
 		return 0;
 
 	// Delete the column of the list and decrease the number of column
@@ -113,11 +113,11 @@ int removeColumn ( Table *table, char *name )
 	return 1;
 }
 
-int deleteTable (Table *table)
+void deleteTable (Table *table)
 {
 	// If the table doesn't exists, return 0
 	if ( table == NULL )
-		return 0;
+		return;
 
 	// Delete all the column and tuple
 	for (;table->nbColumn;)
@@ -127,6 +127,4 @@ int deleteTable (Table *table)
 	free(table->columns);
 	free(table->tuples);
 	free(table);
-
-	return 1;
 }

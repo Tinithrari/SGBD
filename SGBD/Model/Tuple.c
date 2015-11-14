@@ -47,7 +47,7 @@ int removeData ( Tuple *t, unsigned int index )
 	int i;
 
 	// Check if t is not NULL and index is not out of array
-	if ( t == NULL && t->size <= index )
+	if ( t == NULL || t->size <= index )
 		return 0;
 
 	// Free the data into the array at the specified array
