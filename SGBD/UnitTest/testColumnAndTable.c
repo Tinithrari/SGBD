@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 #include "Column.h"
 #include "Tuple.h"
@@ -22,7 +23,10 @@ int main()
 	data = createData(INT, MY_INT_DATA);
 
 	col = createColumn(COLUMN_NAME, INT);
+
 	assert(col != NULL);
+	assert(! strcmp(col->name, COLUMN_NAME) );
+	assert(col->type == INT);
 
 	tuple = createTuple(1);
 	addData(tuple, data);
@@ -32,6 +36,10 @@ int main()
 	// Test l'ajout d'une colonne, puis d'un tuple
 	assert(addColumn(table, col));
 	assert(addTuple(table, tuple));
+
+	// Test pour vérifier que les données soient bien enregistré
+	assert(getColumn(table, COLUMN_NAME) == col);
+	assert(*table->tuples == tuple);
 
 	// Teste la suppression de colonne
 	assert(removeColumn(table, COLUMN_NAME));

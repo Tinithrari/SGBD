@@ -60,7 +60,7 @@ int addTuple ( Table *table, Tuple *tuple )
 	return 1;
 }
 
-static int getColumnIndex(Table *table, char *name)
+static int getColumnIndex ( Table *table, char *name )
 {
 	int index;
 
@@ -75,6 +75,23 @@ static int getColumnIndex(Table *table, char *name)
 
 	// If it not found the column index, return -1
 	return -1;
+}
+
+Column *getColumn ( Table *table, char *name )
+{
+	int index;
+
+	// Check if the table and the name are NULL, return NULL in this case
+	if (table == NULL && name == NULL)
+			return NULL;
+
+	// Browse the array of column and return the column if it the name of the column has been found
+	for (index = 0; index < table->nbColumn; index++)
+		if (! strcmp(name, ( *( table->columns + index ) )->name ) )
+			return *( table->columns + index );
+
+	// If there are no column with this name, return NULL
+	return NULL;
 }
 
 int removeColumn ( Table *table, char *name )

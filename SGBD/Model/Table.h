@@ -8,10 +8,13 @@ typedef struct
   int nbTuple;
 } Table;
 
-Table *createTable	(char *name);
+Table *createTable				(char *name);
 
-int addColumn		(Table *table, Column *column);
-int addTuple		(Table* table, Tuple *tuple);
+int addColumn					(Table *table, Column *column);
+int addTuple					(Table* table, Tuple *tuple);
 
-int removeColumn	(Table *table, char *name);
-int deleteTable		(Table *table);
+Column *getColumn				(Table *table, char *name);
+//Tuple* getTupleByColumnName	(Table* table, char *name);
+
+int removeColumn				(Table *table, char *name);
+int deleteTable					(Table *table);
