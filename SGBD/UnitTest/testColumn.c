@@ -18,7 +18,7 @@ int main(void)
 	assert ( ! strcmp ( col->name , NAME ) );
 	assert ( ! strcmp ( col->type , TYPE ) );
 
-	deleteColumn ( col );
+	removeColumn ( col );
 
 	printf("%s\n", SUCCESS);
 }

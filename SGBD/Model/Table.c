@@ -32,7 +32,7 @@ int addColumn ( Table *table, Column *column )
 		return 0;
 
 	// Reallocation or allocation of memory to add the column, if it fails, return 0
-	if ( realloc(table->columns, sizeof(Column*) * (table->nbColumn + 1) ) == NULL )
+	if ( realloc(table->columns, sizeof(Column*) * ++(table->nbColumn) ) == NULL )
 		return 0;
 
 	// Add the column into the table
@@ -47,8 +47,12 @@ int addTuple ( Table *table, Tuple *tuple )
 	if (table == NULL && tuple == NULL)
 		return 0;
 
+	// Check if there are enough column to add a tuple
+	if (table->nbTuple + 1 > table->nbColumn)
+		return 0;
+
 	// Reallocation or allocation of memory to add the tuple, if it fails, return 0
-	if ( realloc(table->tuples, sizeof(Tuple*), (table->nbTuple + 1) ) == NULL )
+	if ( realloc(table->tuples, sizeof(Tuple*) * ++(table->nbTuple) ) == NULL )
 		return 0;
 
 	*(table->tuples + table->nbTuple) = tuple;
@@ -73,7 +77,7 @@ static int getColumnIndex(Table *table, char *name)
 	return -1;
 }
 
-int deleteColumn ( Table *table, char *name )
+int removeColumn ( Table *table, char *name )
 {
 	int indexOfColumn, indexOfTuple;
 
@@ -82,7 +86,7 @@ int deleteColumn ( Table *table, char *name )
 		return 0;
 
 	// Delete the column of the list and decrease the number of column
-	deleteColumn( *(table->columns + indexOfColumn) );
+	removeColumn( *(table->columns + indexOfColumn) );
 	--(table->nbColumn);
 
 	// Browse the tuple and delete the data associated to the column
@@ -100,7 +104,7 @@ int deleteTable (Table *table)
 
 	// Delete all the column and tuple
 	for (;table->nbColumn;)
-		deleteColumn(*table->columns);
+		removeColumn(*table->columns);
 
 	// Free the table
 	free(table->columns);

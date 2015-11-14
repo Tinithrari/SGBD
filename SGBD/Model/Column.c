@@ -36,7 +36,7 @@ Column *createColumn(char *name, DataType type)
 	return col;
 }
 
-void deleteColumn(Column *col)
+void removeColumn(Column *col)
 {
 	// Delete the name and the column
 	free ( col->name );

@@ -13,5 +13,5 @@ Table *createTable	(char *name);
 int addColumn		(Table *table, Column *column);
 int addTuple		(Table* table, Tuple *tuple);
 
-int deleteColumn	(Table *table, char *name);
+int removeColumn	(Table *table, char *name);
 int deleteTable		(Table *table);
