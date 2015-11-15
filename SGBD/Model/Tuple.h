@@ -26,7 +26,7 @@ typedef struct
 Tuple *createTuple 		( unsigned int size );
 
 /**
- * \fn int addData(Data* data)
+ * \fn int addData(Tuple *tuple, Data* data)
  * \brief a function which add a data into the tuple
  * \param tuple a pointer on the tuple which will contains the data
  * \param data a pointer on the data to add into the tuple
