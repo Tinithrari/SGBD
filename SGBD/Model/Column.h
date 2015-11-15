@@ -26,9 +26,9 @@ typedef struct
 Column *createColumn	(char *name, DataType type);
 
 /**
- * \fn void removeColumn(Column *col)
+ * \fn void deleteColumn(Column *col)
  * \brief A function which remove a column created with createColumn
  * \param col A pointer on a column
  * \warning Do nothing if col is NULL
  */
-void removeColumn		(Column *col);
+void deleteColumn		(Column *col);

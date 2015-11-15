@@ -3,12 +3,12 @@
  * \brief A header for table management
  * \details A header which provide structure and function for table management
  * \author Xavier Heugue
- * \warning You need to include Column.h and Tuple.h before including this file
+ * \warning You need to include Column.h, Data.h and Tuple.h before including this file
  */
 
 /**
  * \struct Table
- * The structur of a table
+ * The structure of a table
  */
 typedef struct
 {

@@ -12,20 +12,24 @@
 int main()
 {
 	Tuple *monTuple;
+	DataValue val;
 
 	monTuple = createTuple(2);
 
 	if (monTuple != NULL)
 	{
-		assert( addData( monTuple, createData(INT, INT_DATA ) ) );
-		assert( addData( monTuple, createData(STR, STR_DATA ) ) );
+		val.integer = INT_DATA;
+		assert( addData( monTuple, createData(INT, val ) ) );
+		val.str = STR_DATA;
+		assert( addData( monTuple, createData(STR, val ) ) );
 
 		assert(monTuple->nb_datas == 2);
 		assert(monTuple->size == 2);
 
-		assert(addData(monTuple, createData( STR, MORE_DATA ) ) );
+		val.str = MORE_DATA;
+		assert(addData( monTuple, createData( STR, val ) ) );
 
-		assert((*(monTuple->datas))->value.integer == INT_DATA);
+		assert( (*(monTuple->datas))->value.integer == INT_DATA);
 		assert(! strcmp( (*(monTuple->datas + 1))->value.str, STR_DATA));
 		assert(! strcmp( (*(monTuple->datas + 2))->value.str, MORE_DATA));
 

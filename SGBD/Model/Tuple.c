@@ -10,7 +10,10 @@ Tuple *createTuple ( unsigned int size )
 
 	// Check if malloc has not fail, return NULL in this case
 	if (t == NULL || size == 0)
+    {
+        free(t);
 		return NULL;
+    }
 
 	// Allocate the number of data needed for the database
 	t->datas = calloc( size , sizeof ( Data* ) );
@@ -24,15 +27,19 @@ Tuple *createTuple ( unsigned int size )
 
 int addData ( Tuple *t , Data* data )
 {
-
+    Data **newPointer;
 	// If the tuple or the data are NULL, return false
 	if ( t == NULL  || data == NULL )
 		return 0;
 
 	// Check the capacity of tuple and resize it if needed
 	if ( t->nb_datas == t->size )
-		if ( realloc( t->datas , ++t->size * sizeof( Data* ) ) == NULL)
+    {
+		if ( (newPointer = (Data**)realloc( t->datas , ++(t->size) * sizeof( Data* ) )) == NULL)
 			return 0;
+
+        t->datas = newPointer;
+    }
 
 	// Add the data into the tuple and increment the number of data
 	*(t->datas + t->nb_datas) = data;
@@ -45,21 +52,25 @@ int addData ( Tuple *t , Data* data )
 int removeData ( Tuple *t, unsigned int index )
 {
 	int i;
+	Data** newPointer;
 
 	// Check if t is not NULL and index is not out of array
 	if ( t == NULL || t->size <= index )
 		return 0;
 
 	// Free the data into the array at the specified array
-	free( *(t->datas + index) );
+	deleteData( *(t->datas + index) );
 
 	// move data in the previous slot
 	for ( i = index; i < t->size - 1; i++ )
 		*(t->datas + i) = *(t->datas + i + 1);
 
 	// resize the size of array
-	if ( realloc( t->datas, --t->size ) == NULL )
+	if ( ( newPointer = (Data**)realloc( t->datas, --(t->size) )) == NULL )
 		return 0;
+    t->datas = newPointer;
+
+    t->nb_datas--;
 
 	return 1;
 }

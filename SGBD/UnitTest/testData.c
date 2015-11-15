@@ -12,24 +12,27 @@
 int main(void)
 {
 	Data *myData;
+	DataValue val;
 
-	myData = createData(STR, STR_TEST);
+	val.str = STR_TEST;
+	myData = createData(STR, val);
 
 	if ( myData != NULL )
 	{
 		assert(! strcmp( myData->value.str, STR_TEST ) );
-		assert(! strcmp( myData->type, STR ) );
+		assert(myData->type == STR );
 		deleteData(myData);
 	}
 	else
 		printf("myData non alloué");
 
-	myData = createIntData( INT, INT_TEST );
+	val.integer = INT_TEST;
+	myData = createData( INT, val );
 
 	if ( myData != NULL )
 	{
 		assert(myData->value.integer == INT_TEST);
-		assert(! strcmp( myData->type, INT ) );
+		assert(myData->type == INT);
 		deleteData( myData );
 	}
 	else

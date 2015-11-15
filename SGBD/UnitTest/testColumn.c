@@ -3,22 +3,22 @@
 #include <string.h>
 #include <assert.h>
 
+#include "../Model/Data.h"
 #include "../Model/Column.h"
 
 #define NAME "id"
-#define TYPE "int"
 #define SUCCESS "Unit Test for Column has been executed succesfully"
 
 int main(void)
 {
 	Column *col;
 
-	col = createColumn(NAME, TYPE);
+	col = createColumn(NAME, INT);
 
 	assert ( ! strcmp ( col->name , NAME ) );
-	assert ( ! strcmp ( col->type , TYPE ) );
+	assert (col->type == INT );
 
-	removeColumn ( col );
+	deleteColumn ( col );
 
 	printf("%s\n", SUCCESS);
 }
