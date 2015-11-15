@@ -9,20 +9,14 @@
 /**
  * \struct Table
  * The structur of a table
- * \var name The name of the table
- * \var columns A pointer on an array of pointer on Column
- * \var tuples A pointer on an array of pointer on Tuple
- * \var nbColumn The number of column into the table
- * \var nbTuple The number of tuples into the table
  */
 typedef struct
 {
-  char *name;
-  Column **columns;
-  Tuple **tuples;
-
-  unsigned int nbColumn;
-  unsigned int nbTuple;
+	char *name; /*!< The name of the table */
+	Column **columns; /*!< A pointer on an array of pointer on Column */
+	Tuple **tuples; /*!< A pointer on an array of pointer on Tuple */
+	unsigned int nbColumn; /*!< The number of column into the table */
+	unsigned int nbTuple; /*!< The number of tuples into the table */
 } Table;
 
 /**
@@ -43,7 +37,7 @@ Table *createTable				(char *name);
 int addColumn					(Table *table, Column *column);
 
 /**
- * \fn int addColumn(Table* table, Tuple* tuple)
+ * \fn int addTuple(Table* table, Tuple* tuple)
  * \brief A function which add a tuple into a table
  * \param table A pointer on the table which will contains the tuple
  * \param tuple A pointer on the tuple to add into the table

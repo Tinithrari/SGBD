@@ -9,13 +9,11 @@
 /**
  * \struct Column
  * The column structure
- * \var name The name of the column
- * \var type The type of the column
  */
 typedef struct
 {
-	char* name;
-	DataType type;
+	char* name; /*!< The name of the column */
+	DataType type; /*!< The type of the column */
 } Column;
 
 /**
@@ -30,7 +28,7 @@ Column *createColumn	(char *name, DataType type);
 /**
  * \fn void removeColumn(Column *col)
  * \brief A function which remove a column created with createColumn
- * \param A pointer on a column
+ * \param col A pointer on a column
  * \warning Do nothing if col is NULL
  */
 void removeColumn		(Column *col);

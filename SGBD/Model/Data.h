@@ -8,33 +8,31 @@
 /**
  * \enum DataType
  * Define the type of a data
- * \var INT The type of the data is int
- * \var STR The type of the data is a string
  */
-typedef enum {INT, STR} DataType;
+typedef enum
+{
+	INT, /*!< The type of the data is int*/
+	STR /*!< The type of the data is a string */
+} DataType;
 
 /**
  * \union DataValue
  * An enum which contains the value of a data
- * \var integer the field which is filled when the data is an integer
- * \var str the field which is filled when the data is a string
  */
 typedef union
 {
-  int integer;
-  char* str;
+  int integer; /*!< The field which is filled when the data is an integer */
+  char* str; /*!< the field which is filled when the data is a string */
 } DataValue;
 
 /**
  * \struct Data
  * The structure of a data
- * \var type The type of the data
- * \var value The value of the data
  */
 typedef struct
 {
-  DataType type;
-  DataValue value;
+  DataType type; /*!< The type of the data */
+  DataValue value; /*!< The value of the data */
 } Data;
 
 /**
@@ -48,8 +46,8 @@ Data *createData	( DataType type, DataValue value );
 
 /**
  * \fn void deleteData(Data *data)
- * \brief a function which free a data
- * \param a pointer to the data which has been created with createData
+ * \brief A function which free a data
+ * \param data A pointer to the data which has been created with createData
  * \warning Do nothing if data is NULL
  */
 void deleteData		( Data *data );

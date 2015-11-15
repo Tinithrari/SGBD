@@ -9,17 +9,12 @@
 /**
  * \struct Tuple
  * The structure of a tuple
- * \var datas A pointer on an array of pointer of Data
- * \var nb_datas The number of data contained in the tuple
- * \var size The size of datas (the array of pointer of data)
  */
 typedef struct
 {
-  
-  Data** datas;
-  int nb_datas;
-  int size;
-  
+	Data** datas; /*!< A pointer on an array of pointer of Data */
+	int nb_datas; /*!< The number of data contained in the tuple */
+	int size; /*!< The size of datas (the array of pointer of data) */
 } Tuple;
 
 /**
@@ -39,7 +34,7 @@ Tuple *createTuple 		( unsigned int size );
 int addData				( Data *data );
 
 /**
- * \fn Data* getDataByIndex(Tuple* t, int index)
+ * \fn Data* getDataByIndex(Tuple* t, unsigned int index)
  * \brief Get a data at a specified index in a tuple
  * \param t the tuple which contains the data
  * \param index the index of the data to get
