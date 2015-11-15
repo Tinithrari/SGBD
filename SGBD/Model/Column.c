@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "Data.h"
 #include "Column.h"
 
 Column *createColumn(char *name, DataType type)
@@ -13,7 +14,7 @@ Column *createColumn(char *name, DataType type)
 	  * In this case, the function return NULL
 	  */
 
-	if ( name == NULL || type == NULL )
+	if ( name == NULL)
 		return NULL;
 
 	col = malloc ( sizeof ( Column ) );
@@ -31,7 +32,6 @@ Column *createColumn(char *name, DataType type)
 
 	// Copy the contains of the parameter in the field of Column struct
 	strcpy ( col->name , name );
-	strcpy ( col->type , type );
 
 	return col;
 }

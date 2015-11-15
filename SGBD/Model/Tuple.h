@@ -28,10 +28,11 @@ Tuple *createTuple 		( unsigned int size );
 /**
  * \fn int addData(Data* data)
  * \brief a function which add a data into the tuple
+ * \param tuple a pointer on the tuple which will contains the data
  * \param data a pointer on the data to add into the tuple
  * \return 0 if data is NULL or if the reallocation fail, 1 if the the operation has been succeed
  */
-int addData				( Data *data );
+int addData				( Tuple *tuple, Data *data );
 
 /**
  * \fn Data* getDataByIndex(Tuple* t, unsigned int index)
