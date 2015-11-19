@@ -7,10 +7,10 @@ application_test:
 
 unit_test:
 	make debug
-	gcc -c UnitTest/testData.c UnitTest/testColumn.c UnitTest/testTuple.c UnitTest/testColumnAndTable.c
+	gcc -g -c UnitTest/testData.c UnitTest/testColumn.c UnitTest/testTuple.c UnitTest/testColumnAndTable.c
 	
 debug:
-	gcc -DDEBUG -c Model/Data.c Model/Column.c Model/Tuple.c Model/Table.c
+	gcc -DDEBUG -c -g Model/Data.c Model/Column.c Model/Tuple.c Model/Table.c
 
 clean:
 	rm *.o

@@ -23,7 +23,7 @@ Data *createData(DataType type, DataValue value)
 	if (type == STR)
 	{
 		data->value.str = (char*)malloc( strlen(value.str) + 1 );
-		data->value.str = value.str;
+		data->value.str = strcpy(data->value.str, value.str);
 	}
 	else
 		data->value.integer = value.integer;

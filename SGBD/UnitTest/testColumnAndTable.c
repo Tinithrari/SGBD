@@ -27,10 +27,6 @@ int main()
 
 	col = createColumn(COLUMN_NAME, INT);
 
-	assert(col != NULL);
-	assert(! strcmp(col->name, COLUMN_NAME) );
-	assert(col->type == INT);
-
 	tuple = createTuple(1);
 	addData(tuple, data);
 
@@ -41,21 +37,27 @@ int main()
 	assert(addColumn(table, col));
 	assert(addTuple(table, tuple));
 
-	// Test pour vérifier que les données soient bien enregistré
-	assert(! strcmp(getColumn(table, COLUMN_NAME)->name, col->name));
+	// Test pour vï¿½rifier que les donnï¿½es soient bien enregistrï¿½
 	assert( (*(table->tuples))->size == tuple->size);
 
 	// Teste la suppression de colonne
 	assert(removeColumn(table, COLUMN_NAME));
 
+	deleteTable(table);
+
 	data = createData(INT, val);
 	tuple = createTuple(1);
 	addData(tuple, data);
+
+	table = createTable(TABLE_NAME);
+
+	assert( table != NULL);
 
 	// Teste un ajout incorrecte de tuple
 	assert(! addTuple(table, tuple));
 
 	deleteTuple(tuple);
+	deleteTable(table);
 
 	printf("%s\n", SUCCESS);
 }

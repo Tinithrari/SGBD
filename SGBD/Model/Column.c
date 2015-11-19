@@ -17,7 +17,7 @@ Column *createColumn(char *name, DataType type)
 	if ( name == NULL)
 		return NULL;
 
-	col = malloc ( sizeof ( Column ) );
+	col = (Column*)malloc ( sizeof ( Column ) );
 
 	// If malloc fail, return NULL
 	if (col == NULL)
