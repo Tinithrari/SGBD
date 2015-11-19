@@ -20,7 +20,7 @@ typedef struct
  * @brief Create dynamically a database
  * @return a pointer on the new database
  */
-Database *createDatabase();
+Database *createDatabase	();
 
 /**
  * @fn int addTable(Database* db, Table* table)
@@ -29,7 +29,7 @@ Database *createDatabase();
  * @param table the table to add in the database
  * @return 1 if the operation succeed, 0 Otherwise
  */
-int addTable			(Database *db, Table* table);
+int addTable				(Database *db, Table* table);
 
 /**
  * @fn Table* getTableByName(Database* db, char* name);
@@ -38,7 +38,7 @@ int addTable			(Database *db, Table* table);
  * @param name The name of the table researched
  * @return a pointer on the table, if the table name doesn't exist it return NULL
  */
-Table* getTableByName(Database *db, char *name);
+Table* getTableByName		(Database *db, char *name);
 
 /**
  * @fn void deleteTable(Database* db, char* name)
@@ -47,12 +47,13 @@ Table* getTableByName(Database *db, char *name);
  * @param name the name of table to delete
  * @return 1 if the operation succeed, 0 otherwise
  */
-int removeTable		(Database *db, char *name);
+int removeTable				(Database *db, char *name);
 
 /**
  * @fn void deleteDatabase(Database *db)
  * @brief Delete the table and all of its contents
  * @param db the database to delete
- * @xarning It delete all the data contain in a database
+ * @warning It delete all the data contain in a database and free db
+ * It do nothing if db is NULL
  */
-void deleteDatabase		(Database *db);
+void deleteDatabase			(Database *db);
