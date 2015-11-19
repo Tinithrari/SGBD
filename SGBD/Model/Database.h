@@ -11,7 +11,7 @@
  */
 typedef struct
 {
-  Table **table; /*!< An array of table */
+  Table **tables; /*!< An array of table */
   int nb_table; /*!< The number of table which are contains in the database */
 }Database;
 

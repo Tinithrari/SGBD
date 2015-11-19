@@ -35,7 +35,7 @@ int main()
     assert(table != NULL);
 	// Test l'ajout d'une colonne, puis d'un tuple
 	assert(addColumn(table, col));
-	assert(addTuple(table, tuple));
+	assert(! addTuple(table, tuple));
 
 	// Test pour v�rifier que les donn�es soient bien enregistr�
 	assert( (*(table->tuples))->size == tuple->size);
@@ -54,7 +54,7 @@ int main()
 	assert( table != NULL);
 
 	// Teste un ajout incorrecte de tuple
-	assert(! addTuple(table, tuple));
+	assert(addTuple(table, tuple) == -2);
 
 	deleteTuple(tuple);
 	deleteTable(table);
