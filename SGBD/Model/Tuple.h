@@ -6,6 +6,8 @@
  * \warning You need to include Data.h before including this file
  */
 
+#define NULLVALUE "NULL"
+
 /**
  * \struct Tuple
  * The structure of a tuple

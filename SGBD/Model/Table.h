@@ -33,6 +33,7 @@ Table *createTable				(char *name);
  * \param table A pointer on the table which will contains the column
  * \param column A pointer on the column to add into the table
  * \return 1 if the operation succeed, 0 if the table or the tuple is NULL or if the operation fails
+ * \warning it add a string value NULL to all of the existing tuple
  */
 int addColumn					(Table *table, Column *column);
 
@@ -41,7 +42,8 @@ int addColumn					(Table *table, Column *column);
  * \brief A function which add a tuple into a table
  * \param table A pointer on the table which will contains the tuple
  * \param tuple A pointer on the tuple to add into the table
- * \return -1 if one of parameter is NULL, 0 if the operation succeed, another number n for the column n-1 there are a problem
+ * \return -3 if one of parameter is NULL, -2 if the number of data in the tuple is too high,
+ * -1 if the allocation fail, 0 if the operation succeed, another number n for the column n-1 there are a problem
  */
 int addTuple					(Table *table, Tuple *tuple);
 

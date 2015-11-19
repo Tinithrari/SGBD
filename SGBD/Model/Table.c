@@ -39,6 +39,8 @@ Table *createTable ( char *name )
 
 int addColumn ( Table *table, Column *column )
 {
+	DataValue nullValue;
+	int i;
     Column** newPointer;
 	// Check if the table and the column exist, return 0 if not exist
 	if (table == NULL || column == NULL)
@@ -47,6 +49,12 @@ int addColumn ( Table *table, Column *column )
 	// Reallocation or allocation of memory to add the column, if it fails, return 0
 	if ( ( newPointer = (Column**)realloc(table->columns, (table->nbColumn + 1) * sizeof(Column*) ) ) == NULL )
 		return 0;
+
+	nullValue.str = NULLVALUE;
+
+	// Set the new value of the tuple equals to "NULL"
+	for (i = 0; i < table->nbTuple; i++)
+		addData( *(table->tuples + i), createData(STR, nullValue));
 
     table->columns = newPointer;
 
@@ -60,18 +68,25 @@ int addColumn ( Table *table, Column *column )
 
 int addTuple ( Table *table, Tuple *tuple )
 {
+	int i;
     Tuple** newPointer;
 	// Check if the table and the tuple exist, return 0 if they not
 	if (table == NULL || tuple == NULL)
-		return 0;
+		return -3;
 
-	// Check if there are enough column to add a tuple
-	if (table->nbTuple + 1 > table->nbColumn)
-		return 0;
+	// Check if there are not too much argument in the tuple
+	if (tuple->nb_datas > table->nbColumn)
+		return -2;
+
+	// Check if there are no problem with type
+	for (i = 0; i < tuple->nb_datas; i++)
+		if ( (*(tuple->datas + i))->type != (*(table->columns + i))->type &&
+				!( (*(tuple->datas + i))->type == STR && !strcmp( (*(tuple->datas + i))->value.str, NULLVALUE) ))
+			return i + 1;
 
 	// Reallocation or allocation of memory to add the tuple, if it fails, return 0
 	if ( (newPointer = (Tuple**) realloc( table->tuples, (table->nbTuple + 1) * sizeof(Tuple*) )) == NULL )
-		return 0;
+		return -1;
 
     table->tuples = newPointer;
 
@@ -79,7 +94,7 @@ int addTuple ( Table *table, Tuple *tuple )
 
 	table->nbTuple++;
 
-	return 1;
+	return 0;
 }
 
 static int getColumnIndex ( Table *table, char *name )
