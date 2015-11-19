@@ -1,3 +1,5 @@
+#include "../View/view.h"
+
 /**
  * \file CommandControler.h
  * \brief Header for Command management
@@ -5,8 +7,6 @@
  * \author Louis Bayart
  * \warning You need to include Data.h before including this file
  */
-
-typedef *DysplayFunction(char*);
 
 /**
  * \fn commandManager(Database db, char* command)

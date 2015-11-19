@@ -1,3 +1,6 @@
+#include "../View/view.h"
+
+
 /**
  * \file ModelControler.h
  * \brief Header for Model management
@@ -5,8 +8,6 @@
  * \author Louis Bayart
  * \warning You need to include Data.h before including this file
  */
-
-typedef *DisplayFunction(char*);
 
 /**
  * \fn tableManager(Table table, char* command)
