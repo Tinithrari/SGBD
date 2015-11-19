@@ -41,7 +41,7 @@ int addColumn					(Table *table, Column *column);
  * \brief A function which add a tuple into a table
  * \param table A pointer on the table which will contains the tuple
  * \param tuple A pointer on the tuple to add into the table
- * \return 1 if the operation succeed,0 if the table or the tuple is NULL or if the operation fails
+ * \return 0 if the operation succeed, another number for the column number if there are a problem
  */
 int addTuple					(Table *table, Tuple *tuple);
 
@@ -53,7 +53,6 @@ int addTuple					(Table *table, Tuple *tuple);
  * \return A pointer on the column called named name, otherwise retuns NULL
  */
 Column *getColumn				(Table *table, char *name);
-//Tuple* getTupleByColumnName	(Table* table, char *name);
 
 /**
  * \fn int removeColumn(Table* table, char* name)
