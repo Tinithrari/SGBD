@@ -56,10 +56,14 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 
 	if (substr == NULL)
 	{
-		char* error = "%s%s%s";
+		char* error = "%s%s%s", buffer;
 
-		sprintf(error, ERROR_HEADER, UNKNOWN_KEYWORD, command);
-		fct(error);
+		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_KEYWORD) + strlen(command) + 1) );
+
+		sprintf(buffer, error, ERROR_HEADER, UNKNOWN_KEYWORD, command);
+		fct(buffer);
+
+		free(buffer);
 		return;
 	}
 
@@ -90,10 +94,16 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 		}
 		else
 		{
-			char* error = "%s%s%s";
+			char* error = "%s%s%s", buffer;
 
-			sprintf(error, ERROR_HEADER, UNKNOWN_KEYWORD, substr);
-			fct(error);
+			buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_KEYWORD) + strlen(substr) + 1) );
+
+			sprintf(buffer, error, ERROR_HEADER, UNKNOWN_KEYWORD, substr);
+			fct(buffer);
+
+			free(buffer);
+			free(substr);
+
 			return;
 		}
 	}
