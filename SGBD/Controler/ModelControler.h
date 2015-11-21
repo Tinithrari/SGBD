@@ -1,6 +1,3 @@
-#include "../View/view.h"
-
-
 /**
  * \file ModelControler.h
  * \brief Header for Model management

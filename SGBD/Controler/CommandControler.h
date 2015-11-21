@@ -1,5 +1,3 @@
-#include "../View/view.h"
-
 /**
  * \file CommandControler.h
  * \brief Header for Command management
@@ -13,5 +11,6 @@
  * \brief A function which manage a command
  * \param db The name of the database
  * \param command The name of the command
+ * \param fct A pointer on the display function
  */
-void commandManager(Database* db, char* command);
+void commandManager(Database* db, char* command, DisplayFunc fct);
