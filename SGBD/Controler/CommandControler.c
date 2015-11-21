@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../VIew/view.h"
+#include "../View/view.h"
 #include "Data.h"
 #include "Column.h"
 #include "Tuple.h"
