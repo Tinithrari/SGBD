@@ -78,33 +78,23 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 
 	}
 	// Si le début ne correspond pas à un ajout ou une suppression, on vérifie s'il s'agit d'une requête d'affichage, ou de quitter le programme
+	else if (! strcmp(substr, DISPLAY_KEYWORD) )
+	{
+
+	}
+	else if (! strcmp(substr, QUIT_KEYWORD) )
+	{
+
+	}
 	else
 	{
-		free(substr);
-		substr = substring(command, 0, 4);
-		toUpperCase(substr);
+		char* error = "%s%s%s", buffer;
 
-		if (! strcmp(substr, DISPLAY_KEYWORD) )
-		{
+		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_KEYWORD) + strlen(substr) + 1) );
 
-		}
-		else if (! strcmp(substr, QUIT_KEYWORD) )
-		{
-
-		}
-		else
-		{
-			char* error = "%s%s%s", buffer;
-
-			buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_KEYWORD) + strlen(substr) + 1) );
-
-			sprintf(buffer, error, ERROR_HEADER, UNKNOWN_KEYWORD, substr);
-			fct(buffer);
-
-			free(buffer);
-			free(substr);
-
-			return;
-		}
+		sprintf(buffer, error, ERROR_HEADER, UNKNOWN_KEYWORD, substr);
+		fct(buffer);
+		free(buffer);
 	}
+	free(substr);
 }
