@@ -39,6 +39,7 @@ char* getStrBeforeCarac(char* str, char delimiter)
 	sub = (char*) malloc( sizeof(char) * (i + 1) );
 
 	sub = strncpy(sub, str, i);
+	*(sub + i) = '\0';
 
 	return sub;
 }
