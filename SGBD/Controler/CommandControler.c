@@ -10,6 +10,13 @@
 #include "Database.h"
 #include "CommandControler.h"
 
+
+typedef struct
+{
+	char** tab;
+	int nbMot;
+} TabMot;
+
 /*
  * Convert lower case character of a char* to upper case character
  */
@@ -23,25 +30,69 @@ static void toUpperCase(char *str)
 			*str = *str - 'a' + 'A';
 }
 
-char* getStrBeforeCarac(char* str, char delimiter)
+static TabMot* getStrBeforeCarac(char* str, char delimiter)
 {
-	int i;
-	char* sub;
+	int i,nbMot,nbLettre,entreQuote,firstSpace;
+	TabMot* tabDeMot;
+	char** tab;
 
-	if (str == NULL)
-		return NULL;
+	tab = (char**) malloc(sizeof(char*));
 
-	for (i = 0; *(str + i) && *(str + i) != delimiter; i++);
+	for (i = 0, nbMot = 0, nbLettre = 0, entreQuote = 0, firstSpace = 0; *(str + i); i++)
+	{
+		if (*(str + i) == '"')
+		{
+			entreQuote = !entreQuote;
+			nbLettre++;
+		}
+		else if (!entreQuote && firstSpace && *(str + i) == ' ')
+		{
+			char **newPointer;
+			newPointer = realloc(tab, sizeof(char*) * (nbMot + 1));
+			*(tab + nbMot) = (char*) malloc(sizeof(char) * (nbLettre + 1) );
+			nbMot++;
+			nbLettre = 0;
+			firstSpace = 0;
+		}
+		else if(!entreQuote && !firstSpace && *(str + i) == ' ')
+		{
 
-	if (! *(str + i))
-		return NULL;
+		}
+		else
+		{
+			nbLettre++;
+		}
+	}
 
-	sub = (char*) malloc( sizeof(char) * (i + 1) );
+	for (i = 0, nbMot = 0, nbLettre = 0, entreQuote = 0, firstSpace = 0; *(str + i); i++)
+	{
+		if (*(str + i) == '"')
+		{
+			entreQuote = !entreQuote;
+			*(*(tab + nbMot) + nbLettre) = *(str + i);
+			nbLettre++;
+		}
+		else if (!entreQuote && firstSpace && *(str + i) == ' ')
+		{
+			nbMot++;
+			nbLettre = 0;
+		}
+		else if(!entreQuote && !firstSpace && *(str + i) == ' ')
+		{
+		}
+		else
+		{
+			*(*(tab + nbMot) + nbLettre) = *(str + i);
+			nbLettre++;
+		}
+	}
 
-	sub = strncpy(sub, str, i);
-	*(sub + i) = '\0';
+	tabDeMot = (TabMot*) malloc(sizeof(TabMot));
 
-	return sub;
+	tabDeMot->tab = tab;
+	tabDeMot->nbMot = nbMot;
+
+	return tab;
 }
 
 void commandManager(Database *db, char *command, DisplayFunc fct)
