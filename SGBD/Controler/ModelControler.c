@@ -6,3 +6,9 @@
 #include "Tuple.h"
 #include "Table.h"
 #include "Database.h"
+#include "Controler.h"
+
+void addTableToDatabase(Database* db, TabMot mot, DisplayFunc fct)
+{
+
+}

@@ -3,7 +3,7 @@
  * \brief Header for Command management
  * \details This header contains all the function needed to manage Command
  * \author Louis Bayart
- * \warning You need to include Database.h before including this file
+ * \warning You need to include view.h, Controler.h, Column.h, Data.h, Database.h, Table.h and Tuple.h before including this file
  */
 
 /**

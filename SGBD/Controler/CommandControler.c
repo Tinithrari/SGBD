@@ -9,6 +9,7 @@
 #include "Table.h"
 #include "Database.h"
 #include "CommandControler.h"
+#include "Controler.h"
 
 #define MAX_ADD_TABLE 3
 #define MAX_ADD_COL 5
@@ -22,12 +23,6 @@
 #define MAX_DISP_TUPLE 3
 
 #define MAX_QUIT 1
-
-typedef struct
-{
-	char** tab;
-	int nbMot;
-} TabMot;
 
 /*
  * Convert lower case character of a char* to upper case character
