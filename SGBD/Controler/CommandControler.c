@@ -295,16 +295,56 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 		else if (! strcmp(substr->tab[1],COL_KEYWORD))
 		{
 			if (substr->nbMot > MAX_DISP_COL)
-				;
+			{
+				char* error = "%s%s", buffer;
+
+				buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(TOO_MUCH_PARAM) + 1) );
+
+				sprintf(buffer, error, ERROR_HEADER, TOO_MUCH_PARAM);
+				fct(buffer);
+				free(buffer);
+			}
 			else if (substr->nbMot < MAX_DISP_COL)
-				;
+			{
+				char* error = "%s%s", buffer;
+
+				buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(NOT_ENOUGH_PARAM) + 1) );
+
+				sprintf(buffer, error, ERROR_HEADER, NOT_ENOUGH_PARAM);
+				fct(buffer);
+				free(buffer);
+			}
+			else
+			{
+
+			}
 		}
 		else if (! strcmp(substr->tab[1],TUPLE_KEYWORD))
 		{
 			if (substr->nbMot > MAX_DISP_TUPLE)
-				;
+			{
+				char* error = "%s%s", buffer;
+
+				buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(TOO_MUCH_PARAM) + 1) );
+
+				sprintf(buffer, error, ERROR_HEADER, TOO_MUCH_PARAM);
+				fct(buffer);
+				free(buffer);
+			}
 			else if (substr->nbMot < MAX_DISP_TUPLE)
-				;
+			{
+				char* error = "%s%s", buffer;
+
+				buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(NOT_ENOUGH_PARAM) + 1) );
+
+				sprintf(buffer, error, ERROR_HEADER, NOT_ENOUGH_PARAM);
+				fct(buffer);
+				free(buffer);
+			}
+			else
+			{
+
+			}
 		}
 	}
 	else if (! strcmp(substr->tab[0], QUIT_KEYWORD) )
