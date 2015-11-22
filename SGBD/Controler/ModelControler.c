@@ -279,15 +279,60 @@ void dispColumn(Database* db, TabMot mot, DisplayFunc fct)
 
 void dispTuple(Database* db, TabMot mot, DisplayFunc fct)
 {
+	int i, j;
+	Table* table;
+	if (db == NULL)
+		return;
+	if ((table = getTableByName(db, mot->tab[2])) == NULL)
+	{
+		char* error = "%s%s%s", buffer;
+		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_TABLE) + strlen(mot->tab[2]) + 1) );
+		sprintf(buffer, error, ERROR_HEADER, UNKNOWN_TABLE, mot->tab[2]);
+		fct(buffer);
+		free(buffer);
+		return;
+	}
 
+	for (i = 0; i < table->nbTuple; i++)
+		for (j = 0; j < table->nbColumn; j++)
+			printf("%s ", (*(( (*(table->tuples)) + i)->datas + j))->value);
 }
 
 void removeTableFromDatabase(Database* db, TabMot mot, DisplayFunc fct)
 {
-
+	if (! removeTable(db, mot->tab[2]))
+	{
+		char* error = "%s%s%s", buffer;
+		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_TABLE) + strlen(mot->tab[2]) + 1) );
+		sprintf(buffer, error, ERROR_HEADER, UNKNOWN_TABLE, mot->tab[2]);
+		fct(buffer);
+		free(buffer);
+		return;
+	}
 }
 
 void removeColumnFromTable(Database* db, TabMot mot, DisplayFunc fct)
 {
+	Table* table;
+	if (db == NULL)
+		return;
+	if ((table = getTableByName(db, mot->tab[2])) == NULL)
+	{
+		char* error = "%s%s%s", buffer;
+		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_TABLE) + strlen(mot->tab[2]) + 1) );
+		sprintf(buffer, error, ERROR_HEADER, UNKNOWN_TABLE, mot->tab[2]);
+		fct(buffer);
+		free(buffer);
+		return;
+	}
 
+	if (! removeColumn(table, mot->tab[3]))
+	{
+		char* error = "%s%s%s", buffer;
+		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_COL) + strlen(mot->tab[3]) + 1) );
+		sprintf(buffer, error, ERROR_HEADER, UNKNOWN_COL, mot->tab[3]);
+		fct(buffer);
+		free(buffer);
+		return;
+	}
 }

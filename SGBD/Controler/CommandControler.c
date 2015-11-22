@@ -153,7 +153,7 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 			}
 			else
 			{
-
+				addTableToDatabase(db, substr, fct);
 			}
 		}
 		else if (! strcmp(substr->tab[1],COL_KEYWORD))
@@ -180,7 +180,7 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 			}
 			else
 			{
-
+				addColumnToTable(db, substr, fct);
 			}
 		}
 		else if (! strcmp(substr->tab[1],TUPLE_KEYWORD))
@@ -197,7 +197,7 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 			}
 			else
 			{
-
+				addTupleToTable(db, substr, fct);
 			}
 		}
 	}
@@ -227,7 +227,7 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 			}
 			else
 			{
-
+				removeTableFromDatabase(db, substr, fct);
 			}
 		}
 		else if (! strcmp(substr->tab[1],COL_KEYWORD))
@@ -254,7 +254,7 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 			}
 			else
 			{
-
+				removeColumnFromTable(db, substr, fct);
 			}
 		}
 	}
@@ -283,8 +283,9 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 				fct(buffer);
 				free(buffer);
 			}
-			else {
-
+			else
+			{
+				dispTable(db, substr, fct);
 			}
 		}
 		else if (! strcmp(substr->tab[1],COL_KEYWORD))
@@ -311,7 +312,7 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 			}
 			else
 			{
-
+				dispColumn(db, substr, fct);
 			}
 		}
 		else if (! strcmp(substr->tab[1],TUPLE_KEYWORD))
@@ -338,7 +339,7 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 			}
 			else
 			{
-
+				dispTuple(db, substr, fct);
 			}
 		}
 	}
@@ -356,7 +357,8 @@ void commandManager(Database *db, char *command, DisplayFunc fct)
 		}
 		else
 		{
-
+			deleteDatabase(db);
+			exit(0);
 		}
 	}
 	else
