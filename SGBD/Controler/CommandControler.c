@@ -30,7 +30,7 @@ static void toUpperCase(char *str)
 			*str = *str - 'a' + 'A';
 }
 
-static TabMot* getStrBeforeCarac(char* str, char delimiter)
+static TabMot* cutStr(char* str)
 {
 	int i,nbMot,nbLettre,entreQuote,firstSpace;
 	TabMot* tabDeMot;
