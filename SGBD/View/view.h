@@ -29,6 +29,6 @@
 #define CANNOT_CAST				"CANNOT_CAST "
 #define TOO_MUCH_PARAM			"TOO_MUCH_PARAMS"
 #define NOT_ENOUGH_PARAM		"NOT_ENOUGH_PARAMS"
-#define NO_COL_IN_TABLE			"NO_ERROR_IN_TABLE"
+#define NO_COL_IN_TABLE			"NO_COL_IN_TABLE"
 
 typedef void (*DisplayFunc)(char *str);

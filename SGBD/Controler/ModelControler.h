@@ -1,3 +1,6 @@
+#define STRING "STR"
+#define INTEGER "INT"
+
 /**
  * \file ModelControler.h
  * \brief Header for Model management
@@ -5,6 +8,7 @@
  * \author Louis Bayart
  * \warning You need to include view.h, Controler.h, Column.h, Data.h, Database.h, Table.h and Tuple.h before including this file
  */
+
 
 /**
  * \fn tableManager(Table* table, char* command)
@@ -93,3 +97,4 @@ void removeTableFromDatabase(Database* db, TabMot mot, DisplayFunc fct);
  *  * \param fct The name of DisplayFunc
  */
 void removeColumnFromTable(Database* db, TabMot mot, DisplayFunc fct);
+
