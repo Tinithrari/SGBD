@@ -6,6 +6,10 @@
  * \warning You need to include Database.h before including this file
  */
 
+/*
+ * \struct TabMot
+ * The structure of a TabMot
+ */
 typedef struct
 {
 	char** tab;

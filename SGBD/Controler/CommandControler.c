@@ -99,7 +99,7 @@ static TabMot* cutStr(char* str)
 	tabDeMot->tab = tab;
 	tabDeMot->nbMot = nbMot;
 
-	return tab;
+	return tabDeMot;
 }
 
 void commandManager(Database *db, char *command, DisplayFunc fct)
