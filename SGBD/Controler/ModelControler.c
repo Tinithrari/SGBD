@@ -1,12 +1,13 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "../View/view.h"
-#include "Data.h"
-#include "Column.h"
-#include "Tuple.h"
-#include "Table.h"
-#include "Database.h"
+#include "../Model/Data.h"
+#include "../Model/Column.h"
+#include "../Model/Tuple.h"
+#include "../Model/Table.h"
+#include "../Model/Database.h"
 #include "Controler.h"
 #include "ModelControler.h"
 
@@ -18,7 +19,7 @@ static void toUpperCase(char *str)
 	if (str == NULL)
 		return;
 
-	for (;;str++)
+	for (;*str;str++)
 		if (*str >= 'a' && *str <= 'z')
 			*str = *str - 'a' + 'A';
 }
@@ -55,7 +56,7 @@ static int isString(char* str)
 	return 1;
 }
 
-void addTableToDatabase(Database* db, TabMot mot, DisplayFunc fct)
+void addTableToDatabase(Database* db, TabMot* mot, DisplayFunc fct)
 {
 	Table* table;
 
@@ -63,7 +64,7 @@ void addTableToDatabase(Database* db, TabMot mot, DisplayFunc fct)
 		return;
 	if (getTableByName(db, mot->tab[2]) != NULL)
 	{
-		char* error = "%s%s%s", buffer;
+		char* error = "%s%s%s", *buffer;
 
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(EXISTING_TABLE) + strlen(mot->tab[2]) + 1) );
 
@@ -78,7 +79,7 @@ void addTableToDatabase(Database* db, TabMot mot, DisplayFunc fct)
 	addTable(db, table);
 }
 
-void addColumnToTable(Database* db, TabMot mot, DisplayFunc fct)
+void addColumnToTable(Database* db, TabMot* mot, DisplayFunc fct)
 {
 	DataType type;
 	Column* column;
@@ -88,7 +89,7 @@ void addColumnToTable(Database* db, TabMot mot, DisplayFunc fct)
 		return;
 	if ((table = getTableByName(db, mot->tab[2])) == NULL)
 	{
-		char* error = "%s%s%s", buffer;
+		char* error = "%s%s%s", *buffer;
 
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_TABLE) + strlen(mot->tab[2]) + 1) );
 
@@ -100,7 +101,7 @@ void addColumnToTable(Database* db, TabMot mot, DisplayFunc fct)
 	}
 	if ((column = getColumn(table, mot->tab[3])) != NULL)
 	{
-		char* error = "%s%s%s", buffer;
+		char* error = "%s%s%s", *buffer;
 
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(EXISTING_COL) + strlen(mot->tab[3]) + 1) );
 
@@ -113,7 +114,7 @@ void addColumnToTable(Database* db, TabMot mot, DisplayFunc fct)
 	toUpperCase(mot->tab[4]);
 	if (( (strcmp(mot->tab[4],INTEGER) ) || (strcmp (mot->tab[4], STRING) )))
 	{
-		char* error = "%s%s%s", buffer;
+		char* error = "%s%s%s", *buffer;
 
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_TYPE) + strlen(mot->tab[4]) + 1) );
 
@@ -132,7 +133,7 @@ void addColumnToTable(Database* db, TabMot mot, DisplayFunc fct)
 	addColumn(table,column);
 }
 
-void addTupleToTable(Database* db, TabMot mot, DisplayFunc fct)
+void addTupleToTable(Database* db, TabMot* mot, DisplayFunc fct)
 {
 	Data* data;
 	DataType type;
@@ -145,7 +146,7 @@ void addTupleToTable(Database* db, TabMot mot, DisplayFunc fct)
 		return;
 	if ((table = getTableByName(db, mot->tab[2])) == NULL)
 	{
-		char* error = "%s%s%s", buffer;
+		char* error = "%s%s%s", *buffer;
 
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_TABLE) + strlen(mot->tab[2]) + 1) );
 
@@ -158,7 +159,7 @@ void addTupleToTable(Database* db, TabMot mot, DisplayFunc fct)
 
 	if(table->nbColumn == 0)
 	{
-		char* error = "%s%s%s", buffer;
+		char* error = "%s%s%s", *buffer;
 
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(NO_COL_IN_TABLE) + 1) );
 
@@ -171,7 +172,7 @@ void addTupleToTable(Database* db, TabMot mot, DisplayFunc fct)
 
 	if (table->nbColumn > mot->nbMot-3)
 	{
-		char* error = "%s%s", buffer;
+		char* error = "%s%s", *buffer;
 
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(NOT_ENOUGH_PARAM) + 1) );
 
@@ -183,7 +184,7 @@ void addTupleToTable(Database* db, TabMot mot, DisplayFunc fct)
 	}
 	else if (table->nbColumn < mot->nbMot-3)
 	{
-		char* error = "%s%s", buffer;
+		char* error = "%s%s", *buffer;
 
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(TOO_MUCH_PARAM) + 1) );
 
@@ -210,7 +211,7 @@ void addTupleToTable(Database* db, TabMot mot, DisplayFunc fct)
 		}
 		else
 		{
-			char* error = "%s%s", buffer;
+			char* error = "%s%s", *buffer;
 
 			buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_KEYWORD) + 1) );
 
@@ -231,7 +232,7 @@ void addTupleToTable(Database* db, TabMot mot, DisplayFunc fct)
 	{
 		Column* col = *((table->columns)+(errorCode-1));
 
-		char* error = "%s%s%s%s%s", buffer;
+		char* error = "%s%s%s%s%s", *buffer;
 
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(CANNOT_CAST) + strlen(mot->tab[3 + (errorCode-1)]) + strlen(" to ") + strlen(col->type == INT ? INTEGER:STRING) + 1) );
 
@@ -244,7 +245,7 @@ void addTupleToTable(Database* db, TabMot mot, DisplayFunc fct)
 	}
 }
 
-void dispTable(Database* db, TabMot mot, DisplayFunc fct)
+void dispTable(Database* db, TabMot* mot, DisplayFunc fct)
 {
 	int i;
 	if (db == NULL)
@@ -253,7 +254,7 @@ void dispTable(Database* db, TabMot mot, DisplayFunc fct)
 		printf("%s\n", (*((db->tables)+i))->name);
 }
 
-void dispColumn(Database* db, TabMot mot, DisplayFunc fct)
+void dispColumn(Database* db, TabMot* mot, DisplayFunc fct)
 {
 	int i;
 	Table* table;
@@ -261,7 +262,7 @@ void dispColumn(Database* db, TabMot mot, DisplayFunc fct)
 		return;
 	if ((table = getTableByName(db, mot->tab[2])) == NULL)
 	{
-		char* error = "%s%s%s", buffer;
+		char* error = "%s%s%s", *buffer;
 
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_TABLE) + strlen(mot->tab[2]) + 1) );
 
@@ -277,7 +278,7 @@ void dispColumn(Database* db, TabMot mot, DisplayFunc fct)
 
 }
 
-void dispTuple(Database* db, TabMot mot, DisplayFunc fct)
+void dispTuple(Database* db, TabMot* mot, DisplayFunc fct)
 {
 	int i, j;
 	Table* table;
@@ -285,7 +286,7 @@ void dispTuple(Database* db, TabMot mot, DisplayFunc fct)
 		return;
 	if ((table = getTableByName(db, mot->tab[2])) == NULL)
 	{
-		char* error = "%s%s%s", buffer;
+		char* error = "%s%s%s", *buffer;
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_TABLE) + strlen(mot->tab[2]) + 1) );
 		sprintf(buffer, error, ERROR_HEADER, UNKNOWN_TABLE, mot->tab[2]);
 		fct(buffer);
@@ -298,11 +299,11 @@ void dispTuple(Database* db, TabMot mot, DisplayFunc fct)
 			printf("%s ", (*(( (*(table->tuples)) + i)->datas + j))->value);
 }
 
-void removeTableFromDatabase(Database* db, TabMot mot, DisplayFunc fct)
+void removeTableFromDatabase(Database* db, TabMot* mot, DisplayFunc fct)
 {
 	if (! removeTable(db, mot->tab[2]))
 	{
-		char* error = "%s%s%s", buffer;
+		char* error = "%s%s%s", *buffer;
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_TABLE) + strlen(mot->tab[2]) + 1) );
 		sprintf(buffer, error, ERROR_HEADER, UNKNOWN_TABLE, mot->tab[2]);
 		fct(buffer);
@@ -311,14 +312,14 @@ void removeTableFromDatabase(Database* db, TabMot mot, DisplayFunc fct)
 	}
 }
 
-void removeColumnFromTable(Database* db, TabMot mot, DisplayFunc fct)
+void removeColumnFromTable(Database* db, TabMot* mot, DisplayFunc fct)
 {
 	Table* table;
 	if (db == NULL)
 		return;
 	if ((table = getTableByName(db, mot->tab[2])) == NULL)
 	{
-		char* error = "%s%s%s", buffer;
+		char* error = "%s%s%s", *buffer;
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_TABLE) + strlen(mot->tab[2]) + 1) );
 		sprintf(buffer, error, ERROR_HEADER, UNKNOWN_TABLE, mot->tab[2]);
 		fct(buffer);
@@ -328,7 +329,7 @@ void removeColumnFromTable(Database* db, TabMot mot, DisplayFunc fct)
 
 	if (! removeColumn(table, mot->tab[3]))
 	{
-		char* error = "%s%s%s", buffer;
+		char* error = "%s%s%s", *buffer;
 		buffer = (char*)malloc(sizeof(char) * (strlen(ERROR_HEADER) + strlen(UNKNOWN_COL) + strlen(mot->tab[3]) + 1) );
 		sprintf(buffer, error, ERROR_HEADER, UNKNOWN_COL, mot->tab[3]);
 		fct(buffer);

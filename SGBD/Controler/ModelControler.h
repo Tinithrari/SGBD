@@ -33,7 +33,7 @@ void databaseManager(Database* db, char* command);
  * \param mot this is a word's tab
  * \param fct The name of DisplayFunc
  */
-void addTableToDatabase(Database* db, TabMot mot, DisplayFunc fct);
+void addTableToDatabase(Database* db, TabMot* mot, DisplayFunc fct);
 
 /**
  * \fn addColumnToTable(Database* db, TabMot mot, DisplayFunc fct)
@@ -42,7 +42,7 @@ void addTableToDatabase(Database* db, TabMot mot, DisplayFunc fct);
  * \param mot this is a word's tab
  * \param fct The name of DisplayFunc
  */
-void addColumnToTable(Database* db, TabMot mot, DisplayFunc fct);
+void addColumnToTable(Database* db, TabMot* mot, DisplayFunc fct);
 
 /**
  * \fn addTupleToTable(Database* db, TabMot mot, DisplayFunc fct)
@@ -51,7 +51,7 @@ void addColumnToTable(Database* db, TabMot mot, DisplayFunc fct);
  * \param mot this is a word's tab
  * \param fct The name of DisplayFunc
  */
-void addTupleToTable(Database* db, TabMot mot, DisplayFunc fct);
+void addTupleToTable(Database* db, TabMot* mot, DisplayFunc fct);
 
 /**
  * \fn dispTable(Database* db, TabMot mot, DisplayFunc fct)
@@ -60,7 +60,7 @@ void addTupleToTable(Database* db, TabMot mot, DisplayFunc fct);
  * \param mot this is a word's tab
  * \param fct The name of DisplayFunc
  */
-void dispTable(Database* db, TabMot mot, DisplayFunc fct);
+void dispTable(Database* db, TabMot* mot, DisplayFunc fct);
 
 /**
  * \fn dispColumn(Database* db, TabMot mot, DisplayFunc fct)
@@ -69,7 +69,7 @@ void dispTable(Database* db, TabMot mot, DisplayFunc fct);
  * \param mot this is a word's tab
  * \param fct The name of DisplayFunc
  */
-void dispColumn(Database* db, TabMot mot, DisplayFunc fct);
+void dispColumn(Database* db, TabMot* mot, DisplayFunc fct);
 
 /**
  * \fn dispTuple(Database* db, TabMot mot, DisplayFunc fct)
@@ -78,16 +78,16 @@ void dispColumn(Database* db, TabMot mot, DisplayFunc fct);
  * \param mot this is a word's tab
  * \param fct The name of DisplayFunc
  */
-void dispTuple(Database* db, TabMot mot, DisplayFunc fct);
+void dispTuple(Database* db, TabMot* mot, DisplayFunc fct);
 
 /**
- * \fn removeTableFromDatabase(Database* db, TabMot mot, DisplayFunc fct)
+ * \fn removeTableFromDatabase(Database* db, TabMot* mot, DisplayFunc fct)
  * \brief A function which remove a table from the database
  * \param db The name of the database
  * \param mot this is a word's tab
  * \param fct The name of DisplayFunc
  */
-void removeTableFromDatabase(Database* db, TabMot mot, DisplayFunc fct);
+void removeTableFromDatabase(Database* db, TabMot* mot, DisplayFunc fct);
 
 /**
  * \fn removeColumnFromTable(Database* db, TabMot mot, DisplayFunc fct)
@@ -96,5 +96,5 @@ void removeTableFromDatabase(Database* db, TabMot mot, DisplayFunc fct);
  * \param mot this is a word's tab
  *  * \param fct The name of DisplayFunc
  */
-void removeColumnFromTable(Database* db, TabMot mot, DisplayFunc fct);
+void removeColumnFromTable(Database* db, TabMot* mot, DisplayFunc fct);
 

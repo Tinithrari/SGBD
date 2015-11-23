@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "Data.h"
+#include "Tuple.h"
+#include "Column.h"
 #include "Table.h"
 #include "Database.h"
 
@@ -28,7 +31,7 @@ int addTable(Database *db, Table* table)
 
 	db->tables = newPointer;
 
-	*(db->tables + db->nb_table + 1) = table;
+	*(db->tables + (db->nb_table)) = table;
 
 	++(db->nb_table);
 

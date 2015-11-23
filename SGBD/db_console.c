@@ -1,4 +1,4 @@
-#include "ConsoleView.c"
+#include "View/ConsoleView.h"
 
 int main()
 {
