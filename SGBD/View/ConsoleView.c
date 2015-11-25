@@ -33,13 +33,13 @@ void run()
 		int c, retour;
 
 
-		retour = scanf("%250[^\n]", command);
+		retour = scanf("%249[^\n]%*c", command);
 
 		if (!retour)
 			do
 			{
 				c = getchar();
-			} while (c != '\n' && c != EOF);
+			} while (c != EOF);
 		else
 			commandManager(db, command, display);
 	}
