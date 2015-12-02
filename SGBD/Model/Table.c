@@ -148,8 +148,9 @@ int removeColumn ( Table *table, char *name )
 	for (i = indexOfColumn; i < (table->nbColumn); i++)
 		*(table->columns + i) = *(table->columns + i + 1);
 
-	if (table->nbColumn)
-		realloc(table->columns, (table->nbColumn) * sizeof(Column*));
+	newPointer = (Column**)realloc(table->columns, (table->nbColumn) * sizeof(Column*));
+
+	table->columns = newPointer;
 
 	// Browse the tuple and delete the data associated to the column
 	for (indexOfTuple = 0; indexOfTuple < table->nbTuple; indexOfTuple++)

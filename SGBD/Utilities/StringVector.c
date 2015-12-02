@@ -20,14 +20,14 @@ StringVector *createStringVector()
 
 int addStringToVector(StringVector *vec, char *mot)
 {
-	char** tmpTab, tmpStr;
+	char** tmpTab, *tmpStr;
 	int length;
 
 
 	if (vec == NULL || mot == NULL)
 		return 0;
 
-	tmpTab = (char**) realloc(vec->tab, sizeof(char*) * ((vec->tab) + 1));
+	tmpTab = (char**) realloc(vec->tab, sizeof(char*) * (vec->length + 1));
 
 	if (tmpTab == NULL)
 		return 0;
@@ -39,32 +39,35 @@ int addStringToVector(StringVector *vec, char *mot)
 	tmpStr = (char*) malloc(sizeof(char) * (length + 1));
 
 	if (tmpStr == NULL)
-		return NULL;
+		return 0;
 
-	*(vec->tab) = tmpStr;
+	*(vec->tab + vec->length) = tmpStr;
 
-	strcpy( *(vec->tab), mot );
+	strcpy( *(vec->tab + vec->length), mot );
 
-	(vec->length)++;
+	vec->length++;
 
 	return 1;
 }
 
-int removeStringVector(StringVector *vec, char *mot)
+int removeStringToVector(StringVector *vec, char *mot)
 {
 	int i, j;
-	if (vec == NULL || mot == NULL)
+	char** tmp;
+	if (vec == NULL || vec->tab == NULL || mot == NULL)
 		return 0;
 
 	for (i = 0; i < vec->length; i++)
 	{
-		if (! strcmp( *((vec->tab) + i), mot ) )
+		if (! strcmp( *(vec->tab + i), mot ) )
 		{
-			free(*((vec->tab) + i));
+			free(*( vec->tab + i ) );
+
 			for (j = i; j < vec->length - 1; j++)
-				*((vec->tab) + j) = *((vec->tab) + j + 1);
-			realloc(vec->tab, sizeof(char*) * (vec->length - 1) );
-			(vec->length)--;
+				*(vec->tab + j) = *(vec->tab + j + 1);
+			tmp = realloc(vec->tab, sizeof(char*) * (vec->length - 1) );
+			vec->tab = tmp;
+			vec->length--;
 
 			return 1;
 		}

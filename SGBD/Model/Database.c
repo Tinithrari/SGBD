@@ -55,7 +55,7 @@ Table *getTableByName(Database *db, char *name)
 int removeTable(Database *db, char *name)
 {
 	int i,j;
-	Table *table;
+	Table *table, **tables;
 
 	if (db == NULL || name == NULL)
 		return 0;
@@ -75,7 +75,9 @@ int removeTable(Database *db, char *name)
 	for (j = i; j < db->nb_table - 1; j++)
 		*(db->tables + j) = *(db->tables + j + 1);
 
-	realloc(db->tables, (db->nb_table - 1) * sizeof(Table*));
+	tables = (Table**)realloc(db->tables, (db->nb_table - 1) * sizeof(Table*));
+
+	db->tables = tables;
 
 	return 1;
 }
