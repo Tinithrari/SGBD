@@ -79,6 +79,8 @@ int removeTable(Database *db, char *name)
 
 	db->tables = tables;
 
+	--(db->nb_table);
+
 	return 1;
 }
 
