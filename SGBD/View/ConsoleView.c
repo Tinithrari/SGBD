@@ -9,9 +9,6 @@
 #include "../Model/Database.h"
 #include "view.h"
 #include "ConsoleView.h"
-#include "../Controler/Controler.h"
-#include "../Controler/CommandControler.h"
-#include "../Controler/ModelControler.h"
 
 void display(char* str)
 {
