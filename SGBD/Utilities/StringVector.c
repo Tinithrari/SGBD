@@ -18,13 +18,13 @@ StringVector *createStringVector()
 	return vec;
 }
 
-int addStringToVector(StringVector *vec, char *mot)
+int addStringToVector(StringVector *vec, char *word)
 {
 	char** tmpTab, *tmpStr;
 	int length;
 
 
-	if (vec == NULL || mot == NULL)
+	if (vec == NULL || word == NULL)
 		return 0;
 
 	tmpTab = (char**) realloc(vec->tab, sizeof(char*) * (vec->length + 1));
@@ -34,7 +34,7 @@ int addStringToVector(StringVector *vec, char *mot)
 
 	vec->tab = tmpTab;
 
-	length = strlen(mot);
+	length = strlen(word);
 
 	tmpStr = (char*) malloc(sizeof(char) * (length + 1));
 
@@ -43,7 +43,7 @@ int addStringToVector(StringVector *vec, char *mot)
 
 	*(vec->tab + vec->length) = tmpStr;
 
-	strcpy( *(vec->tab + vec->length), mot );
+	strcpy( *(vec->tab + vec->length), word );
 
 	vec->length++;
 
