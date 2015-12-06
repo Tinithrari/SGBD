@@ -13,7 +13,7 @@
 #include "../Model/Table.h"
 #include "../Model/Database.h"
 
-static void disp_unknown_keyword_error(char *mot)
+static void disp_unknown_keyword_error(char *mot, DisplayFunc fct)
 {
 	char* error;
 	if (mot == NULL)
@@ -61,7 +61,7 @@ static void analyseAddRequest(StringVector *request, DisplayFunc fct, Database *
 	}
 	else
 	{
-		disp_unknown_keyword_error(request->tab[1]);
+		disp_unknown_keyword_error(request->tab[1], fct);
 	}
 }
 
@@ -89,7 +89,7 @@ static void analyseDelRequest(StringVector *request, DisplayFunc fct, Database *
 	}
 	else
 	{
-		disp_unknown_keyword_error(request->tab[1]);
+		disp_unknown_keyword_error(request->tab[1], fct);
 	}
 }
 
@@ -117,7 +117,7 @@ static void analyseDispRequest(StringVector *request, DisplayFunc fct, Database 
 	}
 	else
 	{
-		disp_unknown_keyword_error(request->tab[1]);
+		disp_unknown_keyword_error(request->tab[1], fct);
 	}
 }
 
@@ -165,6 +165,6 @@ void analyzeRequest(StringVector *request, DisplayFunc fct, Database *db)
 	}
 	else
 	{
-		disp_unknown_keyword_error(request->tab[0]);
+		disp_unknown_keyword_error(request->tab[0], fct);
 	}
 }
