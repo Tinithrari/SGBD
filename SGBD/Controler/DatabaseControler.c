@@ -17,7 +17,7 @@
 static void disp_table_control_error(char *header, char *arg, DisplayFunc fct)
 {
 	char* error;
-	if (header == NULL || arg == NULL)
+	if (header == NULL || arg == NULL || fct == NULL)
 		return;
 
 	error = (char*) malloc( ( sizeof(char) * strlen(header) + ( sizeof(char) * strlen(arg) + 1 ) ) );
