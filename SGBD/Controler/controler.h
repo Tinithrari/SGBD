@@ -7,3 +7,4 @@
 #define TYPE_STRING		"STR"
 
 #define UNKNOWN_TYPE	"UNKNOWN_TYPE "
+#define CANNOT_CAST		"CANNOT_CAST "
