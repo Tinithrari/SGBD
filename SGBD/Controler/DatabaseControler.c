@@ -1,7 +1,8 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
-#include "view.h"
+#include "../View/view.h"
 #include "controler.h"
 
 #include "../Utilities/StringVector.h"
@@ -25,7 +26,7 @@ static void disp_table_control_error(char *header, char *arg, DisplayFunc fct)
 	if (error == NULL)
 		return;
 
-	ssprintf(error, "%s%s", header, arg);
+	sprintf(error, "%s%s", header, arg);
 
 	fct(error);
 

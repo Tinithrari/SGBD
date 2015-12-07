@@ -1,6 +1,9 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
-#include "view.h"
+#include "../View/view.h"
 #include "controler.h"
 
 #include "../Utilities/StringVector.h"
@@ -26,7 +29,7 @@ static int isNumeric(char *param)
 static void toUpperCase(char* phrase)
 {
 	for(;*phrase;phrase++)
-		*phrase = toUpper(*phrase);
+		*phrase = toupper(*phrase);
 }
 
 static void disp_error_cast(Data *arg1, char *arg2, DisplayFunc fct)
@@ -34,9 +37,9 @@ static void disp_error_cast(Data *arg1, char *arg2, DisplayFunc fct)
 	char error[1024];
 
 	if (arg1->type == STR)
-		ssprintf(error, "%s%s to %s", CANNOT_CAST, arg1->value.str, arg2);
+		sprintf(error, "%s%s to %s", CANNOT_CAST, arg1->value.str, arg2);
 	else
-		ssprintf(error, "%s%d to %s", CANNOT_CAST, arg1->value.integer, arg2);
+		sprintf(error, "%s%d to %s", CANNOT_CAST, arg1->value.integer, arg2);
 
 	fct(error);
 }
@@ -52,7 +55,7 @@ static void disp_classic_error(char *header, char *arg, DisplayFunc fct)
 	if (error == NULL)
 		return;
 
-	ssprintf(error, "%s%s", header, arg);
+	sprintf(error, "%s%s", header, arg);
 
 	fct(error);
 
@@ -70,10 +73,12 @@ void addColInTable(Database *db, StringVector *request, DisplayFunc fct)
 	if (request->length < 5)
 	{
 		fct(NOT_ENOUGH_WORDS);
+		return;
 	}
 	else if (request->length > 5)
 	{
 		fct(TOO_MUCH_WORDS);
+		return;
 	}
 
 	if (! (t = getTableByName(db, request->tab[2])) )
@@ -92,7 +97,7 @@ void addColInTable(Database *db, StringVector *request, DisplayFunc fct)
 
 	if ( strcmp(request->tab[4], TYPE_INT) && strcmp(request->tab[4], TYPE_STRING) )
 	{
-		disp_classic_error(UNKNOWN_TYPE, request->tab[4]);
+		disp_classic_error(UNKNOWN_TYPE, request->tab[4], fct);
 		return;
 	}
 
@@ -113,6 +118,7 @@ void addTupleInTable(Database *db, StringVector *request, DisplayFunc fct)
 	if (request->length < 4)
 	{
 		fct(NOT_ENOUGH_WORDS);
+		return;
 	}
 
 	if (! (t = getTableByName(db, request->tab[2])) )
@@ -121,16 +127,28 @@ void addTupleInTable(Database *db, StringVector *request, DisplayFunc fct)
 		return;
 	}
 
-	tuple = createTuple();
+	if (t->nbColumn == 0)
+	{
+		disp_classic_error(NO_COL_IN_TABLE, t->name, fct);
+		return;
+	}
+
+	tuple = createTuple(t->nbColumn);
 
 	if (t->nbColumn > request->length - 3)
+	{
 		fct(NOT_ENOUGH_PARAM);
+		return;
+	}
 	else if (t->nbColumn < request->length - 3)
+	{
 		fct(TOO_MUCH_PARAM);
+		return;
+	}
 
 	for (i = 3; i < request->length; i++)
 	{
-		Data data;
+		Data *data;
 		DataValue value;
 		DataType dT;
 
@@ -139,7 +157,10 @@ void addTupleInTable(Database *db, StringVector *request, DisplayFunc fct)
 		else
 			dT = STR;
 
-		dT == INT ? value.integer = atoi(request->tab[i]) : value.str = request->tab[i];
+		if (dT == INT)
+			value.integer = atoi(request->tab[i]);
+		else
+			value.str = request->tab[i];
 
 		data = createData(dT, value);
 
@@ -154,12 +175,12 @@ void addTupleInTable(Database *db, StringVector *request, DisplayFunc fct)
 	}
 	else if (i > 0)
 	{
-		DataType dT = tuple->datas[i]->type;
+		DataType dT = tuple->datas[i - 1]->type;
 
 		if (dT == INT)
-			disp_error_cast(tuple->datas[i], "INT", fct);
+			disp_error_cast(tuple->datas[i - 1], "STR", fct);
 		else
-			disp_error_cast(tuple->datas[i], "STR", fct);
+			disp_error_cast(tuple->datas[i - 1], "INT", fct);
 	}
 }
 
@@ -171,9 +192,15 @@ void delColFromTable(Database *db, StringVector *request, DisplayFunc fct)
 		return;
 
 	if (request->length < 4)
+	{
 		fct(NOT_ENOUGH_WORDS);
+		return;
+	}
 	else if (request->length > 4)
+	{
 		fct(TOO_MUCH_WORDS);
+		return;
+	}
 
 	if (! (t = getTableByName(db, request->tab[2])) )
 	{
@@ -195,9 +222,15 @@ void dispColsFromTable(Database *db, StringVector *request, DisplayFunc fct)
 		return;
 
 	if (request->length < 3)
+	{
 		fct(NOT_ENOUGH_WORDS);
+		return;
+	}
 	else if (request->length > 3)
+	{
 		fct(TOO_MUCH_WORDS);
+		return;
+	}
 
 	if (! (t = getTableByName(db, request->tab[2])) )
 	{
@@ -209,7 +242,10 @@ void dispColsFromTable(Database *db, StringVector *request, DisplayFunc fct)
 	{
 		char *tmpPtr;
 
-		tmpPtr = (char*) realloc(tabCol, (sizeof(char) * (strlen(t->columns[i]->name) + 7)));
+		tmpPtr = (char*) realloc(tabCol, (sizeof(char) * (strlen(t->columns[i]->name) + ((i + 1) == t->nbColumn ? 6 : 7))));
+
+		if (tabCol == NULL)
+			tmpPtr[0] = '\0';
 
 		if (tmpPtr == NULL)
 		{
@@ -220,7 +256,7 @@ void dispColsFromTable(Database *db, StringVector *request, DisplayFunc fct)
 
 		tabCol = tmpPtr;
 
-		length += strlen(t->columns[i]->name) + ((i + 1) == t->nbColumn ? 4 : 5);
+		length += strlen(t->columns[i]->name) + ((i + 1) == t->nbColumn ? 5 : 6);
 
 		strcat(tabCol, t->columns[i]->name);
 		strcat(tabCol, "(");
@@ -230,8 +266,11 @@ void dispColsFromTable(Database *db, StringVector *request, DisplayFunc fct)
 		if (i + 1 != t->nbColumn)
 			strcat(tabCol, " ");
 	}
-	fct(tabCol);
-	free(tabCol);
+	if (tabCol != NULL)
+	{
+		fct(tabCol);
+		free(tabCol);
+	}
 }
 void dispTuplesFromTable(Database *db, StringVector *request, DisplayFunc fct)
 {
@@ -242,10 +281,16 @@ void dispTuplesFromTable(Database *db, StringVector *request, DisplayFunc fct)
 	if (db == NULL || request == NULL || fct == NULL)
 		return;
 
-	if (request->length < 4)
+	if (request->length < 3)
+	{
 		fct(NOT_ENOUGH_WORDS);
-	else if (request->length > 4)
+		return;
+	}
+	else if (request->length > 3)
+	{
 		fct(TOO_MUCH_WORDS);
+		return;
+	}
 
 	if (! (t = getTableByName(db, request->tab[2])) )
 	{
@@ -278,6 +323,9 @@ void dispTuplesFromTable(Database *db, StringVector *request, DisplayFunc fct)
 				return;
 			}
 
+			if (tuple == NULL)
+				tmp[0] = '\0';
+
 			tuple = tmp;
 
 			strcat(tuple, buffer);
@@ -285,8 +333,11 @@ void dispTuplesFromTable(Database *db, StringVector *request, DisplayFunc fct)
 			if ((j + 1) != t->nbColumn)
 				strcat(tuple, " ");
 		}
-		fct(tuple);
-		free(tuple);
+		if (tuple != NULL)
+		{
+			fct(tuple);
+			free(tuple);
+		}
 	}
 }
 

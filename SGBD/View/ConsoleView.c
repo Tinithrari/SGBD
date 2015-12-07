@@ -34,6 +34,7 @@ static int addWordToStruct(char *begin, char *end, StringVector* vec)
 
 	memcpy(mot, begin, length);
 	mot[length] = '\0';
+
 	if (! addStringToVector(vec, mot) )
 	{
 		free(mot);
@@ -104,7 +105,7 @@ void run()
 	StringVector* vec;
 	Database *db;
 
-	db = (Database*) malloc(sizeof(Database));
+	db = createDatabase();
 
 	for(;strcmp(command, "QUIT");)
 	{
@@ -119,14 +120,9 @@ void run()
 		vec = diviserCommande(command);
 
 		if (vec != NULL)
-		{
-			printf("Nombre de mot : %d\nContenu du tableau :\n", vec->length);
-
-			for(c = 0; c < vec->length; c++)
-				printf("vec->tab[%d] = %s\n", c,*(vec->tab + c));
-		}
+			analyzeRequest(vec, display, db);
 
 		deleteStringVector(vec);
 	}
-	free(db);
+	deleteDatabase(db);
 }

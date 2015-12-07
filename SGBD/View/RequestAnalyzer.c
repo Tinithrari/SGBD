@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -12,6 +13,8 @@
 #include "../Model/Column.h"
 #include "../Model/Table.h"
 #include "../Model/Database.h"
+#include "../Controler/DatabaseControler.h"
+#include "../Controler/TableControler.h"
 
 static void disp_unknown_keyword_error(char *mot, DisplayFunc fct)
 {
@@ -24,7 +27,7 @@ static void disp_unknown_keyword_error(char *mot, DisplayFunc fct)
 	if (error == NULL)
 		return;
 
-	ssprintf(error, "%s%s", UNKNOWN_KEYWORD, mot);
+	sprintf(error, "%s%s", UNKNOWN_KEYWORD, mot);
 
 	fct(error);
 
@@ -34,7 +37,7 @@ static void disp_unknown_keyword_error(char *mot, DisplayFunc fct)
 static void toUpperCase(char* phrase)
 {
 	for(;*phrase;phrase++)
-		*phrase = toUpper(*phrase);
+		*phrase = toupper(*phrase);
 }
 
 static void analyseAddRequest(StringVector *request, DisplayFunc fct, Database *db)
@@ -49,15 +52,15 @@ static void analyseAddRequest(StringVector *request, DisplayFunc fct, Database *
 
 	if (! strcmp(request->tab[1], TABLE_KEYWORD))
 	{
-
+		addTableInDatabase(db, request, fct);
 	}
 	else if (! strcmp(request->tab[1], COL_KEYWORD))
 	{
-
+		addColInTable(db, request, fct);
 	}
 	else if (! strcmp(request->tab[1], TUPLE_KEYWORD))
 	{
-
+		addTupleInTable(db, request, fct);
 	}
 	else
 	{
@@ -77,15 +80,11 @@ static void analyseDelRequest(StringVector *request, DisplayFunc fct, Database *
 
 	if (! strcmp(request->tab[1], TABLE_KEYWORD))
 	{
-
+		deleteTableFromDatabase(db, request, fct);
 	}
 	else if (! strcmp(request->tab[1], COL_KEYWORD))
 	{
-
-	}
-	else if (! strcmp(request->tab[1], TUPLE_KEYWORD))
-	{
-
+		delColFromTable(db, request, fct);
 	}
 	else
 	{
@@ -105,15 +104,15 @@ static void analyseDispRequest(StringVector *request, DisplayFunc fct, Database 
 
 	if (! strcmp(request->tab[1], SET_TABLES_KEYWORD))
 	{
-
+		displayTablesFromDatabase(db, request, fct);
 	}
 	else if (! strcmp(request->tab[1], SET_COLS_KEWORD))
 	{
-
+		dispColsFromTable(db, request, fct);
 	}
 	else if (! strcmp(request->tab[1], SET_TUPLES_KEYWORD))
 	{
-
+		dispTuplesFromTable(db, request, fct);
 	}
 	else
 	{
