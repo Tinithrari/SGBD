@@ -55,7 +55,7 @@ Table *getTableByName(Database *db, char *name)
 int removeTable(Database *db, char *name)
 {
 	int i,j;
-	Table *table, **tables;
+	Table *table = NULL, **tables;
 
 	if (db == NULL || name == NULL)
 		return 0;

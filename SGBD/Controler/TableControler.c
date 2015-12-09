@@ -26,6 +26,16 @@ static int isNumeric(char *param)
 	return *param == '\0';
 }
 
+static int isString(char *str)
+{
+	if (str == NULL && *str != '"')
+		return 0;
+
+	for (str++;*str && *str != '"'; str++);
+
+	return *str == '"' && *(str + 1) == '\0';
+}
+
 static void toUpperCase(char* phrase)
 {
 	for(;*phrase;phrase++)
@@ -154,8 +164,13 @@ void addTupleInTable(Database *db, StringVector *request, DisplayFunc fct)
 
 		if (isNumeric(request->tab[i]))
 			dT = INT;
-		else
+		else if (isString(request->tab[i]))
 			dT = STR;
+		else
+		{
+			disp_classic_error(UNKNOWN_KEYWORD, request->tab[i], fct);
+			return;
+		}
 
 		if (dT == INT)
 			value.integer = atoi(request->tab[i]);
@@ -313,9 +328,9 @@ void dispTuplesFromTable(Database *db, StringVector *request, DisplayFunc fct)
 			else
 				sprintf(buffer, "%s", d->value.str);
 
-			length += strlen(buffer);
+			length += strlen(buffer) + (j + 1 == t->nbColumn ? 0 : 1);
 
-			tmp = realloc(tuple, sizeof(char) * (length + (j + 1 == t->nbColumn ? 1 : 2) ));
+			tmp = realloc(tuple, sizeof(char) * (length + 1));
 
 			if (tmp == NULL)
 			{
