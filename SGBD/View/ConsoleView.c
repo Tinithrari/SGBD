@@ -17,7 +17,7 @@
 
 void display(char* str)
 {
-	if (strpbrk(str, ERROR_HEADER))
+	if (strpbrk(str, ERROR_HEADER) == str)
 		fprintf(stderr, "%s\n", str);
 	else
 		fprintf(stdout, "%s\n", str);
@@ -111,6 +111,9 @@ void run()
 	{
 		int c;
 		command[0] = '\0';
+
+		printf("=> ");
+		fflush(stdout);
 
 		c = scanf("%999[^\n]%*c", command);
 

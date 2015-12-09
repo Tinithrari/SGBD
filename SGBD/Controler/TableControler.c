@@ -114,6 +114,8 @@ void addColInTable(Database *db, StringVector *request, DisplayFunc fct)
 	c = createColumn(request->tab[3], ! strcmp(request->tab[4], TYPE_INT) ? INT : STR);
 
 	addColumn(t, c);
+
+	fct("=> OK");
 }
 
 void addTupleInTable(Database *db, StringVector *request, DisplayFunc fct)
@@ -197,6 +199,8 @@ void addTupleInTable(Database *db, StringVector *request, DisplayFunc fct)
 		else
 			disp_error_cast(tuple->datas[i - 1], "INT", fct);
 	}
+
+	fct("=> OK");
 }
 
 void delColFromTable(Database *db, StringVector *request, DisplayFunc fct)
@@ -225,6 +229,8 @@ void delColFromTable(Database *db, StringVector *request, DisplayFunc fct)
 
 	if (! removeColumn(t, request->tab[3]) )
 		disp_classic_error(UNKNOWN_COL, request->tab[3], fct);
+
+	fct("=> OK");
 }
 
 void dispColsFromTable(Database *db, StringVector *request, DisplayFunc fct)
@@ -286,6 +292,8 @@ void dispColsFromTable(Database *db, StringVector *request, DisplayFunc fct)
 		fct(tabCol);
 		free(tabCol);
 	}
+
+	fct("=> OK");
 }
 void dispTuplesFromTable(Database *db, StringVector *request, DisplayFunc fct)
 {
@@ -354,5 +362,7 @@ void dispTuplesFromTable(Database *db, StringVector *request, DisplayFunc fct)
 			free(tuple);
 		}
 	}
+
+	fct("=> OK");
 }
 

@@ -53,6 +53,8 @@ void addTableInDatabase(Database *db, StringVector *request, DisplayFunc fct)
 
 	t = createTable(request->tab[2]);
 	addTable(db, t);
+
+	fct("=> OK");
 }
 
 void deleteTableFromDatabase(Database *db, StringVector *request, DisplayFunc fct)
@@ -73,6 +75,8 @@ void deleteTableFromDatabase(Database *db, StringVector *request, DisplayFunc fc
 	{
 		disp_table_control_error(UNKNOWN_TABLE, request->tab[2], fct);
 	}
+
+	fct("=> OK");
 }
 
 void displayTablesFromDatabase(Database *db, StringVector *request, DisplayFunc fct)
@@ -89,4 +93,6 @@ void displayTablesFromDatabase(Database *db, StringVector *request, DisplayFunc 
 
 	for (i = 0; i < db->nb_table; i++)
 		fct( (*(db->tables + i))->name );
+
+	fct("=> OK");
 }

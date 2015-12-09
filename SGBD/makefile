@@ -32,3 +32,4 @@ utilities_debug:
 clean:
 	rm *.o
 	rm *Test
+	rm SGBD
