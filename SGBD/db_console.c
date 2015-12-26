@@ -74,7 +74,7 @@ static StringVector *diviserCommande(char *command)
 
 int main(int argc, char **argv)
 {
-	FILE** input_streams = NULL;
+	char** input_streams = NULL;
 	char *output = NULL;
 	int nbFile = 0;
 	if (argc > 1)
@@ -85,16 +85,22 @@ int main(int argc, char **argv)
 		{
 			if ( !strcmp(*(argv + i),INPUT_OPTION) )
 			{
-				FILE* is;
 				i++;
 
-				is = fopen( *(argv + i), "r");
+					#ifdef WINDOWS
+						struct _stat s;
+						_stat(*(argv + i), s);
 
-				if (is == NULL)
+					#elif defined(UNIX)
+						struct stat s;
+						stat(*(argv + i), s);
+					#endif
+
+				if (errno == ENOENT)
 					fprintf(stderr, "Cannot open the file %s : %s\n", *(argv + i), strerror(errno));
 				else
 				{
-					FILE** tmp = realloc(input_streams, (nbFile + 1) * sizeof(FILE*));
+					char** tmp = (char**)realloc(input_streams, (nbFile + 1) * sizeof(FILE*));
 
 					if (tmp == NULL)
 						fprintf(stderr, "Cannot read %s : Not enough RAM\n", *(argv + i));
@@ -102,7 +108,7 @@ int main(int argc, char **argv)
 					{
 						input_streams = tmp;
 
-						input_streams[nbFile] = is;
+						input_streams[nbFile] = *(argv + i);
 						nbFile++;
 					}
 				}
@@ -142,5 +148,5 @@ int main(int argc, char **argv)
 		freopen(output, "w", stderr);
 	}
 
-	run();
+	run(input_streams, nbFile);
 }

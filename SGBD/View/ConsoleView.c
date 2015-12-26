@@ -2,6 +2,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef UNIX
+#include <unistd.h>
+#elif defined(WINDOWS)
+#include <io.h>
+#endif
+
 #include "view.h"
 #include "ConsoleView.h"
 #include "../Utilities/StringVector.h"
@@ -97,8 +103,22 @@ static StringVector *diviserCommande(char *command)
 	return vec;
 }
 
-void run()
+void run(char** files, const int nbFile)
 {
+	int compteur = 0;
+	FILE* stdin_copy = NULL;
+
+	if (nbFile > 0)
+	{
+		#ifdef UNIX
+			dup2(stdin, stdin_copy);
+		#elif defined(WINDOWS)
+			_dup2(stdin, stdin_copy);
+		#endif
+
+		freopen(*files, "r", stdin);
+	}
+
 	char command[TAILLE_BUFFER];
 	command[0]='\0';
 
@@ -119,6 +139,23 @@ void run()
 
 		if (!c)
 			while ( (c = getchar()) != '\n' && c != EOF);
+
+		if (c == EOF && files != NULL && (compteur + 1) < nbFile)
+		{
+			freopen( *(files + compteur), "r", stdin);
+			compteur++;
+		}
+		else if (c == EOF && files != NULL && (compteur + 1) == nbFile)
+		{
+			fclose(stdin);
+			#ifdef UNIX
+				dup2(stdin_copy, stdin);
+			#elif defined(WINDOWS)
+				_dup2(stdin_copy, stdin);
+			#endif
+			free(files);
+			files = NULL;
+		}
 
 		vec = diviserCommande(command);
 
