@@ -1,5 +1,3 @@
-#define UNIX
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -20,58 +18,6 @@
 
 #define ERROR_OUTPUT "ERR_OUTPUT_FILE"
 
-static StringVector *diviserCommande(char *command)
-{
-	StringVector *vec;
-	char *pointer, *first;
-	int entreQuote, firstSpace, length;
-
-	// On vérifie si la commande est nulle
-	if (command == NULL)
-		return NULL;
-
-	// On créer un vecteur de string pour stocker les divers éléments de la requête
-	vec = createStringVector();
-	entreQuote = 0, firstSpace = 0;
-
-	for (first = (pointer = command); *pointer; pointer++)
-	{
-		if (!firstSpace && *pointer != ' ')
-		{
-			first = pointer;
-			firstSpace = 1;
-		}
-		if (*pointer == '"')
-		{
-			entreQuote = ! entreQuote;
-		}
-		else if (*pointer == ' ' && ! entreQuote && firstSpace)
-		{
-
-			if (! addWordToStruct(first, pointer, vec))
-			{
-				deleteStringVector(vec);
-				return NULL;
-			}
-
-			first = pointer + 1;
-
-			firstSpace = 0;
-		}
-	}
-
-	if (command[0] != '\0' && *(pointer - 1) != ' ')
-	{
-		if (! addWordToStruct(first, pointer, vec))
-		{
-			deleteStringVector(vec);
-			return NULL;
-		}
-	}
-
-	return vec;
-}
-
 int main(int argc, char **argv)
 {
 	char** input_streams = NULL;
@@ -80,7 +26,6 @@ int main(int argc, char **argv)
 	if (argc > 1)
 	{
 		int i;
-
 		for (i = 1; i < argc; i++)
 		{
 			if ( !strcmp(*(argv + i),INPUT_OPTION) )
@@ -89,11 +34,11 @@ int main(int argc, char **argv)
 
 					#ifdef WINDOWS
 						struct _stat s;
-						_stat(*(argv + i), s);
+						_stat(*(argv + i), &s);
 
 					#elif defined(UNIX)
 						struct stat s;
-						stat(*(argv + i), s);
+						stat(*(argv + i), &s);
 					#endif
 
 				if (errno == ENOENT)
@@ -121,11 +66,11 @@ int main(int argc, char **argv)
 				{
 					#ifdef WINDOWS
 						struct _stat s;
-						_stat(*(argv + i), s);
+						_stat(*(argv + i), &s);
 
 					#elif defined(UNIX)
 						struct stat s;
-						stat(*(argv + i), s);
+						stat(*(argv + i), &s);
 					#endif
 
 					if (errno == ENOENT)

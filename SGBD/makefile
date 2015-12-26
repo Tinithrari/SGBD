@@ -3,10 +3,10 @@ install:
 	make controler
 	make model
 	make utilities
-	gcc -c -g db_console.c
-	gcc -o SGBD *.o
+	gcc -DUNIX -c -g db_console.c
+	gcc -DUNIX -o SGBD *.o
 view:
-	gcc -c View/*.c
+	gcc -DUNIX -c View/*.c
 model:
 	gcc -c Model/*.c
 controler:
@@ -19,10 +19,10 @@ install_debug:
 	make controler_debug
 	make model_debug
 	make utilities_debug
-	gcc -c -g db_console.c
+	gcc -DUNIX -c -g db_console.c
 	gcc -g -o SGBD *.o
 view_debug:
-	gcc -g -c View/*.c
+	gcc -DUNIX -g -c View/*.c
 model_debug:
 	gcc -g -c Model/*.c
 controler_debug:

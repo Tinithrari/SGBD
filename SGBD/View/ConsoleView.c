@@ -106,17 +106,24 @@ static StringVector *diviserCommande(char *command)
 void run(char** files, const int nbFile)
 {
 	int compteur = 0;
-	FILE* stdin_copy = NULL;
+	int stdin_copy = NULL;
+	int close_file = 0;
+	int isFile = 0;
+
+	FILE *f;
 
 	if (nbFile > 0)
 	{
 		#ifdef UNIX
-			dup2(stdin, stdin_copy);
+			stdin_copy = dup(0);
 		#elif defined(WINDOWS)
-			_dup2(stdin, stdin_copy);
+			_dup2(STDIN_FILENO, stdin_copy);
 		#endif
-
-		freopen(*files, "r", stdin);
+		f = fopen(*files, "r");
+		#ifdef UNIX
+		dup2(fileno(f), 0);
+		#endif
+		isFile = 1;
 	}
 
 	char command[TAILLE_BUFFER];
@@ -132,37 +139,51 @@ void run(char** files, const int nbFile)
 		int c;
 		command[0] = '\0';
 
-		printf("=> ");
+		if (! isFile)
+			printf("=> ");
 		fflush(stdout);
 
 		c = scanf("%999[^\n]%*c", command);
 
-		if (!c)
-			while ( (c = getchar()) != '\n' && c != EOF);
-
-		if (c == EOF && files != NULL && (compteur + 1) < nbFile)
+		if (feof(stdin) && files != NULL && (compteur + 1) < nbFile)
 		{
-			freopen( *(files + compteur), "r", stdin);
+			fclose(f);
+			f = fopen(*(files + compteur), "r");
+			dup2( fileno(f), 0);
 			compteur++;
+			close_file = 1;
 		}
-		else if (c == EOF && files != NULL && (compteur + 1) == nbFile)
+		else if (feof(stdin) && files != NULL && (compteur + 1) == nbFile)
 		{
-			fclose(stdin);
+			fclose(f);
 			#ifdef UNIX
-				dup2(stdin_copy, stdin);
+			close(0);
+			dup2(stdin_copy, STDIN_FILENO);
+			close(stdin_copy);
 			#elif defined(WINDOWS)
-				_dup2(stdin_copy, stdin);
+			_dup2(stdin_copy, STDIN_FILENO);
 			#endif
 			free(files);
 			files = NULL;
+			close_file = 1;
+			isFile = 0;
 		}
 
-		vec = diviserCommande(command);
+		if (!c)
+		{
+			while ( (c = getchar()) != '\n' && c != EOF);
+		}
+
+		if (! close_file)
+			vec = diviserCommande(command);
+		else
+			close_file = 0;
 
 		if (vec != NULL)
 			analyzeRequest(vec, display, db);
 
 		deleteStringVector(vec);
+		vec = NULL;
 	}
 	deleteDatabase(db);
 }

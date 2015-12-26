@@ -263,7 +263,7 @@ void dispColsFromTable(Database *db, StringVector *request, DisplayFunc fct)
 	{
 		char *tmpPtr;
 
-		tmpPtr = (char*) realloc(tabCol, (sizeof(char) * (strlen(t->columns[i]->name) + ((i + 1) == t->nbColumn ? 6 : 7))));
+		tmpPtr = (char*) realloc(tabCol, length + (sizeof(char) * (strlen(t->columns[i]->name) + ((i + 1) == t->nbColumn ? 6 : 7))));
 
 		if (tabCol == NULL)
 			tmpPtr[0] = '\0';
