@@ -115,13 +115,13 @@ void run(char** files, const int nbFile)
 	if (nbFile > 0)
 	{
 		#ifdef UNIX
-			stdin_copy = dup(0);
+			stdin_copy = dup(STDIN_FILENO);
 		#elif defined(WINDOWS)
-			_dup2(STDIN_FILENO, stdin_copy);
+			_stdin = _dup(STDIN_FILENO);
 		#endif
 		f = fopen(*files, "r");
 		#ifdef UNIX
-		dup2(fileno(f), 0);
+		dup2(fileno(f), STDIN_FILENO);
 		#endif
 		isFile = 1;
 	}
@@ -161,7 +161,9 @@ void run(char** files, const int nbFile)
 			dup2(stdin_copy, STDIN_FILENO);
 			close(stdin_copy);
 			#elif defined(WINDOWS)
+			_close(STDIN_FILENO);
 			_dup2(stdin_copy, STDIN_FILENO);
+			_close(stdin_copy);
 			#endif
 			free(files);
 			files = NULL;
