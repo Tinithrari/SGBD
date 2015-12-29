@@ -16,6 +16,85 @@
 
 #include "TableControler.h"
 
+static void dispCartesianProduct(Database *db, StringVector *tables, DisplayFunc fct)
+{
+	int *compteur = (int*) calloc(tables->length, sizeof(int));
+
+	if (compteur == NULL)
+		return;
+
+	//TODO Effectuer l'automate récupérant le produit cartésien des tables
+}
+
+/**
+ * @return Un vecteur contenant le nom des tables
+ */
+static StringVector* splitCartesianProduct(char *str)
+{
+	int debut, fin;
+	StringVector *tables = createStringVector();
+
+	for (debut = 0, fin = 0; fin < strlen(str); fin++)
+		if (fin == '*')
+		{
+			char* tName;
+			int n = fin - debut;
+
+			tName = (char *) malloc(sizeof(char) * (n + 1));
+
+			if (tName == NULL)
+			{
+				deleteStringVector(tables);
+				return NULL;
+			}
+
+			tName = strncopy(tName, str, n);
+			tName[n] = '\0';
+
+			if (! addStringToVector(tables, tName))
+			{
+				deleteStringVector(tables);
+				free(tName);
+				return NULL;
+			}
+			str++;
+			debut = ++fin;
+
+			free(tName);
+		}
+
+	return tables;
+}
+
+/**
+ * @brief Effectue une analyse synthaxique pour vérifier l'existance d'un produit cartésien
+ * @return retourne 0 si ce n'est pas un produit cartésien, 1 si s'en est un, -1 s'il s'agit d'un produit cartésien erroné
+ */
+static int isCP(char *str)
+{
+	int cartesien = 0;
+
+	if (*str == '*')
+		return -1;
+
+	str++;
+
+	for (;*str;str++)
+	{
+		if (*str == '*')
+		{
+			cartesien = 1;
+			if (*(str - 1) == '*')
+				return -1;
+		}
+	}
+
+	if (*(str - 1) == '*')
+		return -1;
+
+	return cartesien;
+}
+
 static int isNumeric(char *param)
 {
 	if (param == NULL)
@@ -115,7 +194,7 @@ void addColInTable(Database *db, StringVector *request, DisplayFunc fct)
 
 	addColumn(t, c);
 
-	fct("=> OK");
+	fct("OK");
 }
 
 void addTupleInTable(Database *db, StringVector *request, DisplayFunc fct)
@@ -200,7 +279,7 @@ void addTupleInTable(Database *db, StringVector *request, DisplayFunc fct)
 			disp_error_cast(tuple->datas[i - 1], "INT", fct);
 	}
 
-	fct("=> OK");
+	fct("OK");
 }
 
 void delColFromTable(Database *db, StringVector *request, DisplayFunc fct)
@@ -230,7 +309,7 @@ void delColFromTable(Database *db, StringVector *request, DisplayFunc fct)
 	if (! removeColumn(t, request->tab[3]) )
 		disp_classic_error(UNKNOWN_COL, request->tab[3], fct);
 
-	fct("=> OK");
+	fct("OK");
 }
 
 void dispColsFromTable(Database *db, StringVector *request, DisplayFunc fct)
@@ -263,10 +342,7 @@ void dispColsFromTable(Database *db, StringVector *request, DisplayFunc fct)
 	{
 		char *tmpPtr;
 
-		tmpPtr = (char*) realloc(tabCol, length + (sizeof(char) * (strlen(t->columns[i]->name) + ((i + 1) == t->nbColumn ? 6 : 7))));
-
-		if (tabCol == NULL)
-			tmpPtr[0] = '\0';
+		tmpPtr = (char*) realloc(tabCol, length + (sizeof(char) * (strlen(t->columns[i]->name) + strlen(t->name) + ((i + 1) == t->nbColumn ? 7 : 8))));
 
 		if (tmpPtr == NULL)
 		{
@@ -275,10 +351,15 @@ void dispColsFromTable(Database *db, StringVector *request, DisplayFunc fct)
 			return;
 		}
 
+		if (tabCol == NULL)
+			tmpPtr[0] = '\0';
+
 		tabCol = tmpPtr;
 
-		length += strlen(t->columns[i]->name) + ((i + 1) == t->nbColumn ? 5 : 6);
+		length += strlen(t->columns[i]->name) + strlen(t->name) + ((i + 1) == t->nbColumn ? 6 : 7);
 
+		strcat(tabCol, t->name);
+		strcat(tabCol, ".");
 		strcat(tabCol, t->columns[i]->name);
 		strcat(tabCol, "(");
 		strcat(tabCol, t->columns[i]->type == INT ? "INT" : "STR");
@@ -293,7 +374,7 @@ void dispColsFromTable(Database *db, StringVector *request, DisplayFunc fct)
 		free(tabCol);
 	}
 
-	fct("=> OK");
+	fct("OK");
 }
 void dispTuplesFromTable(Database *db, StringVector *request, DisplayFunc fct)
 {
@@ -363,6 +444,6 @@ void dispTuplesFromTable(Database *db, StringVector *request, DisplayFunc fct)
 		}
 	}
 
-	fct("=> OK");
+	fct("OK");
 }
 

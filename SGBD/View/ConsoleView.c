@@ -12,6 +12,8 @@
 #include "ConsoleView.h"
 #include "../Utilities/StringVector.h"
 
+#include "RequestAnalyzer.h"
+
 #include "../Model/Data.h"
 #include "../Model/Tuple.h"
 #include "../Model/Column.h"

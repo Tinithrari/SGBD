@@ -15,6 +15,24 @@
 
 #include "DatabaseControler.h"
 
+static const char* illegalChar = {'*', '<', '>', '=', '.', '\0'};
+
+/**
+ * retourne \0 si la chaine n'est pas illégal, sinon le retourne le caractère illégal
+ */
+static char illegalName(char* str)
+{
+	for (;*str; str++)
+	{
+		char *cursor = illegalChar;
+
+		for (;*cursor; cursor++)
+			if (*str == *cursor)
+				return *str;
+	}
+	return '\0';
+}
+
 static void disp_table_control_error(char *header, char *arg, DisplayFunc fct)
 {
 	char* error;
@@ -49,12 +67,23 @@ void addTableInDatabase(Database *db, StringVector *request, DisplayFunc fct)
 	if (getTableByName(db, request->tab[2]))
 	{
 		disp_table_control_error(EXISTING_TABLE, request->tab[2], fct);
+		return;
+	}
+
+	if (illegalName(request->tab[2]))
+	{
+		char illChar[1];
+		*illChar = illegalName(request->tab[2]);
+
+		disp_table_control_error(ILLEGAL_NAME, request->tab[2]);
+		disp_table_control_error(ILLEGAL_CHARACTER, illChar);
+		return;
 	}
 
 	t = createTable(request->tab[2]);
 	addTable(db, t);
 
-	fct("=> OK");
+	fct("OK");
 }
 
 void deleteTableFromDatabase(Database *db, StringVector *request, DisplayFunc fct)
@@ -76,7 +105,7 @@ void deleteTableFromDatabase(Database *db, StringVector *request, DisplayFunc fc
 		disp_table_control_error(UNKNOWN_TABLE, request->tab[2], fct);
 	}
 
-	fct("=> OK");
+	fct("OK");
 }
 
 void displayTablesFromDatabase(Database *db, StringVector *request, DisplayFunc fct)
@@ -94,5 +123,5 @@ void displayTablesFromDatabase(Database *db, StringVector *request, DisplayFunc 
 	for (i = 0; i < db->nb_table; i++)
 		fct( (*(db->tables + i))->name );
 
-	fct("=> OK");
+	fct("OK");
 }
