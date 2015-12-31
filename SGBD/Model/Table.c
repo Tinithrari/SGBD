@@ -97,7 +97,7 @@ int addTuple ( Table *table, Tuple *tuple )
 	return 0;
 }
 
-static int getColumnIndex ( Table *table, char *name )
+int getColumnIndex ( Table *table, char *name )
 {
 	int index;
 

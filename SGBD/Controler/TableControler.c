@@ -14,6 +14,7 @@
 #include "../Model/Table.h"
 #include "../Model/Database.h"
 
+#include "TupleControler.h"
 #include "TableControler.h"
 
 static void disp_error_cast(Data *arg1, char *arg2, DisplayFunc fct)
@@ -513,13 +514,97 @@ void dispTuplesFromTable(Database *db, StringVector *request, DisplayFunc fct)
 			return;
 		}
 
-		for(i = 0; i < t->nbTuple; i++)
+		if (request->length > 3)
 		{
-			char *tuple = (char*)tupleToString(t->tuples[i]);
-			fct(tuple);
-			free(tuple);
-		}
+			Comparison** c = (Comparison**)malloc(sizeof(Comparison*));
+			Tuple** tuples;
+			int nbCp = 0;
+			*c = NULL;
+			int i;
 
+			toUpperCase(request->tab[3]);
+			if (strcmp(request->tab[3], "WHERE") || (!strcmp(request->tab[3], "WHERE") && request->length == 4))
+			{
+				fct("ERR: SYNTHAX_ERROR");
+				free(c);
+				return;
+			}
+
+			for (i = 4; i < request->length; i++)
+			{
+				if (i % 2 == 0)
+				{
+					Comparison* cp = createComparison(db, request->tab[i], fct);
+
+					if (cp != NULL)
+					{
+						Comparison** tmp = (Comparison**) realloc(c, nbCp + 2);
+
+						if (tmp == NULL)
+						{
+							int j;
+
+							for (j = 0; *(c + j); j++)
+								free(*(c + j));
+							free(c);
+							return;
+						}
+
+						c = tmp;
+
+						*(c + nbCp++) = cp;
+						*(c + nbCp) = NULL;
+					}
+				}
+				else
+				{
+					toUpperCase(request->tab[i]);
+
+					if (strcmp(request->tab[i], "AND"))
+					{
+						int j;
+
+						fct("ERR: SYNTHAX_ERROR");
+
+						for (j = 0; *(c + j); j++)
+							free(*(c + j));
+						free(c);
+						return;
+					}
+				}
+			}
+
+			tuples = getTupleWhere(t, c, fct);
+
+			if (tuples != NULL)
+			{
+				for (i = 0; *(tuples + i); i++)
+				{
+					char *tuple = (char*)tupleToString(tuples[i]);
+					fct(tuple);
+					fct("onche");
+					free(tuple);
+				}
+			}
+
+			free(tuples);
+
+			for (;*c; c++)
+			{
+				free((*c)->op1);
+				free((*c)->op2);
+			}
+			free(c);
+		}
+		else
+		{
+			for(i = 0; i < t->nbTuple; i++)
+			{
+				char *tuple = (char*)tupleToString(t->tuples[i]);
+				fct(tuple);
+				free(tuple);
+			}
+		}
 		fct("OK");
 	}
 	else if (isCP(request->tab[2]) == -1)

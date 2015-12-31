@@ -57,6 +57,15 @@ int addTuple					(Table *table, Tuple *tuple);
 Column *getColumn				(Table *table, char *name);
 
 /**
+ * \fn int getColumnIndex(Table* table, char* name)
+ * \brief A function which give a column named name
+ * \param table A pointer on the table where searched the column
+ * \param name A pointer on the name of the column to search
+ * \return THe index of the column or -1 if not exists
+ */
+int getColumnIndex				(Table *table, char *name);
+
+/**
  * \fn int removeColumn(Table* table, char* name)
  * \brief A function which remove a column and datas which are associated to the column
  * \param table A pointer on the table which contains the column to delete
