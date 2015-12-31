@@ -12,13 +12,13 @@
 #include "ConsoleView.h"
 #include "../Utilities/StringVector.h"
 
-#include "RequestAnalyzer.h"
-
 #include "../Model/Data.h"
 #include "../Model/Tuple.h"
 #include "../Model/Column.h"
 #include "../Model/Table.h"
 #include "../Model/Database.h"
+
+#include "RequestAnalyzer.h"
 
 
 #define TAILLE_BUFFER 1000

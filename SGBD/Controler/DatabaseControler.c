@@ -15,7 +15,7 @@
 
 #include "DatabaseControler.h"
 
-static const char* illegalChar = {'*', '<', '>', '=', '.', '\0'};
+const char illegalChar[] = {'*', '<', '>', '=', '.', '\0'};
 
 /**
  * retourne \0 si la chaine n'est pas illégal, sinon le retourne le caractère illégal
@@ -24,10 +24,10 @@ static char illegalName(char* str)
 {
 	for (;*str; str++)
 	{
-		char *cursor = illegalChar;
+		int i;
 
-		for (;*cursor; cursor++)
-			if (*str == *cursor)
+		for (i = 0; illegalChar[i]; i++)
+			if (*str == illegalChar[i])
 				return *str;
 	}
 	return '\0';
@@ -75,8 +75,8 @@ void addTableInDatabase(Database *db, StringVector *request, DisplayFunc fct)
 		char illChar[1];
 		*illChar = illegalName(request->tab[2]);
 
-		disp_table_control_error(ILLEGAL_NAME, request->tab[2]);
-		disp_table_control_error(ILLEGAL_CHARACTER, illChar);
+		disp_table_control_error(ILLEGAL_NAME, request->tab[2], fct);
+		disp_table_control_error(ILLEGAL_CHARACTER, illChar, fct);
 		return;
 	}
 

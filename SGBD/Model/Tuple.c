@@ -1,8 +1,28 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include "Data.h"
 #include "Tuple.h"
+
+static char* intToASCII(int nb)
+{
+	char *str;
+	int length = log10( (double) abs(nb)) + 1 + (nb < 0 ? 2 : 1), i;
+
+	str = (char*)malloc(sizeof(char) * length);
+
+	if (nb < 0)
+		*str = '-';
+
+	*(str + length - 1) = '\0';
+
+	for (i = length - 2; nb > 0; i--, nb /= 10)
+		*(str + i) = (nb % 10) + '0';
+
+	return str;
+}
 
 Tuple *createTuple ( unsigned int size )
 {
@@ -107,4 +127,51 @@ Data *getDataByIndex( Tuple *tuple, unsigned int index )
 		return NULL;
 
 	return *(tuple->datas + index);
+}
+
+char* tupleToString( Tuple *t )
+{
+	int i;
+	int length = 0;
+	char *str = NULL;
+
+	// If the tuple is NULL
+	if (t == NULL)
+		return NULL;
+
+	for (i = 0; i < t->nb_datas; i++)
+	{
+		char *data;
+		char *tmp;
+
+		if (t->datas[i]->type == INT)
+			data = intToASCII(t->datas[i]->value.integer);
+		else
+			data = t->datas[i]->value.str;
+
+		tmp = (char*) realloc(str, (strlen(data) + length + (i == (t->nb_datas - 1) ? 1 : 2)) * sizeof(char));
+
+		if (tmp == NULL)
+		{
+			free(str);
+			return NULL;
+		}
+
+		if (str == NULL)
+			*tmp = '\0';
+
+		str = tmp;
+
+		strcat(str, data);
+
+		if (i != t->nb_datas - 1)
+			strcat(str, " ");
+
+		length = strlen(str);
+
+		if (t->datas[i]->type == INT)
+			free(data);
+	}
+
+	return str;
 }

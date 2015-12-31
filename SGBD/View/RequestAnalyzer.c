@@ -16,6 +16,8 @@
 #include "../Controler/DatabaseControler.h"
 #include "../Controler/TableControler.h"
 
+#include "RequestAnalyzer.h"
+
 static void disp_unknown_keyword_error(char *mot, DisplayFunc fct)
 {
 	char* error;

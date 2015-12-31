@@ -4,7 +4,7 @@ install:
 	make model
 	make utilities
 	gcc -DUNIX -c -g db_console.c
-	gcc -DUNIX -o SGBD *.o
+	gcc -DUNIX -o SGBD *.o -lm
 view:
 	gcc -DUNIX -c View/*.c
 model:
@@ -20,7 +20,7 @@ install_debug:
 	make model_debug
 	make utilities_debug
 	gcc -DUNIX -c -g db_console.c
-	gcc -g -o SGBD *.o
+	gcc -g -o SGBD *.o -lm
 view_debug:
 	gcc -DUNIX -g -c View/*.c
 model_debug:
@@ -31,5 +31,4 @@ utilities_debug:
 	gcc -g -c Utilities/*.c
 clean:
 	rm *.o
-	rm *Test
-	rm SGBD
+	rm ./SGBD

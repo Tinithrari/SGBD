@@ -16,14 +16,154 @@
 
 #include "TableControler.h"
 
-static void dispCartesianProduct(Database *db, StringVector *tables, DisplayFunc fct)
+static void disp_error_cast(Data *arg1, char *arg2, DisplayFunc fct)
 {
-	int *compteur = (int*) calloc(tables->length, sizeof(int));
+	char error[1024];
 
-	if (compteur == NULL)
+	if (arg1->type == STR)
+		sprintf(error, "%s%s to %s", CANNOT_CAST, arg1->value.str, arg2);
+	else
+		sprintf(error, "%s%d to %s", CANNOT_CAST, arg1->value.integer, arg2);
+
+	fct(error);
+}
+
+static void disp_classic_error(char *header, char *arg, DisplayFunc fct)
+{
+	char* error;
+	if (header == NULL || arg == NULL || fct == NULL)
 		return;
 
-	//TODO Effectuer l'automate récupérant le produit cartésien des tables
+	error = (char*) malloc( ( sizeof(char) * strlen(header) + ( sizeof(char) * strlen(arg) + 1 ) ) );
+
+	if (error == NULL)
+		return;
+
+	sprintf(error, "%s%s", header, arg);
+
+	fct(error);
+
+	free(error);
+}
+
+static char* getCartesianProduct(Database *db, StringVector *tables, DisplayFunc fct)
+{
+	int *compteur = (int*) calloc(tables->length, sizeof(int)),
+	lastElement = tables->length - 1;
+	Table* base = getTableByName(db, *(tables->tab) ), *last = getTableByName(db, tables->tab[lastElement]);
+	char* res = NULL;
+	int length = 0;
+
+	if (base == NULL || last == NULL)
+	{
+		free(compteur);
+		disp_classic_error(UNKNOWN_TABLE, base == NULL ? tables->tab[0] : tables->tab[lastElement], fct);
+		return NULL;
+	}
+
+	for (;compteur[0] < base->nbTuple;)
+	{
+		int j, lengthBase = 0;
+		char *tupleBase = NULL;
+
+		for (j = 0; j < lastElement; j++)
+		{
+			char *tuple, *tmp;
+			Table *t = getTableByName(db, tables->tab[j]);
+
+			if (t == NULL)
+			{
+				free(res);
+				free(compteur);
+				free(tupleBase);
+
+				return NULL;
+			}
+
+			tuple = (char*)tupleToString(t->tuples[compteur[j]]);
+
+			if (tuple == NULL)
+			{
+				free(compteur);
+				free(res);
+				free(tupleBase);
+
+				return NULL;
+			}
+
+			tmp = (char*) realloc(tupleBase, (lengthBase + strlen(tuple) + 2 ) * sizeof(char));
+
+			if (tmp == NULL)
+			{
+				free(compteur);
+				free(res);
+				free(tuple);
+				free(tupleBase);
+				return NULL;
+			}
+
+			if (tupleBase == NULL)
+				*tmp = '\0';
+
+			tupleBase = tmp;
+
+			strcat(tupleBase, tuple);
+
+			//strcat(res, j == lastElement ? "\n" : " ");
+
+			lengthBase += strlen(tuple);
+
+			*(tupleBase + lengthBase++) = ' ';
+			*(tupleBase + lengthBase) = '\0';
+
+			free(tuple);
+		}
+
+		for (; compteur[lastElement] < getTableByName(db, tables->tab[lastElement])->nbTuple; compteur[lastElement]++)
+		{
+			char *tmp, *tuple = tupleToString(last->tuples[compteur[lastElement]]);
+
+			tmp = realloc(res, (length + lengthBase + strlen(tuple) + 2) * sizeof(char) );
+
+			if (tmp == NULL)
+			{
+				free(compteur);
+				free(res);
+				free(tuple);
+				free(tupleBase);
+				return NULL;
+			}
+
+			if (res == NULL)
+				*tmp = '\0';
+
+			res = tmp;
+
+			strcat(res, tupleBase);
+			strcat(res, tuple);
+
+			length += strlen(tuple) + strlen(tupleBase);
+
+			*(res + length++) = '\n';
+			*(res + length) = '\0';
+
+			free(tuple);
+		}
+
+		for (j = lastElement; j > 0 && compteur[j] == getTableByName(db, tables->tab[j])->nbTuple; j--)
+		{
+			compteur[j] = 0;
+			compteur[j - 1]++;
+
+			for (j = 0; j <= lastElement; j++)
+				printf("%d", compteur[j]);
+			printf("\n");
+		}
+
+		free(tupleBase);
+	}
+	free(compteur);
+	return res;
 }
 
 /**
@@ -31,11 +171,13 @@ static void dispCartesianProduct(Database *db, StringVector *tables, DisplayFunc
  */
 static StringVector* splitCartesianProduct(char *str)
 {
+	char *lastName;
 	int debut, fin;
 	StringVector *tables = createStringVector();
 
-	for (debut = 0, fin = 0; fin < strlen(str); fin++)
-		if (fin == '*')
+	for (debut = 0, fin = 0; fin <= strlen(str); fin++)
+	{
+		if (str[fin] == '*' || str[fin] == '\0')
 		{
 			char* tName;
 			int n = fin - debut;
@@ -48,8 +190,10 @@ static StringVector* splitCartesianProduct(char *str)
 				return NULL;
 			}
 
-			tName = strncopy(tName, str, n);
+			tName = strncpy(tName, str + debut, n);
 			tName[n] = '\0';
+
+			printf("%s\n", tName);
 
 			if (! addStringToVector(tables, tName))
 			{
@@ -58,11 +202,11 @@ static StringVector* splitCartesianProduct(char *str)
 				return NULL;
 			}
 			str++;
-			debut = ++fin;
+			debut = fin;
 
 			free(tName);
 		}
-
+	}
 	return tables;
 }
 
@@ -119,36 +263,6 @@ static void toUpperCase(char* phrase)
 {
 	for(;*phrase;phrase++)
 		*phrase = toupper(*phrase);
-}
-
-static void disp_error_cast(Data *arg1, char *arg2, DisplayFunc fct)
-{
-	char error[1024];
-
-	if (arg1->type == STR)
-		sprintf(error, "%s%s to %s", CANNOT_CAST, arg1->value.str, arg2);
-	else
-		sprintf(error, "%s%d to %s", CANNOT_CAST, arg1->value.integer, arg2);
-
-	fct(error);
-}
-
-static void disp_classic_error(char *header, char *arg, DisplayFunc fct)
-{
-	char* error;
-	if (header == NULL || arg == NULL || fct == NULL)
-		return;
-
-	error = (char*) malloc( ( sizeof(char) * strlen(header) + ( sizeof(char) * strlen(arg) + 1 ) ) );
-
-	if (error == NULL)
-		return;
-
-	sprintf(error, "%s%s", header, arg);
-
-	fct(error);
-
-	free(error);
 }
 
 void addColInTable(Database *db, StringVector *request, DisplayFunc fct)
@@ -390,60 +504,40 @@ void dispTuplesFromTable(Database *db, StringVector *request, DisplayFunc fct)
 		fct(NOT_ENOUGH_WORDS);
 		return;
 	}
-	else if (request->length > 3)
+	if (! isCP(request->tab[2]))
 	{
-		fct(TOO_MUCH_WORDS);
-		return;
-	}
 
-	if (! (t = getTableByName(db, request->tab[2])) )
-	{
-		disp_classic_error(UNKNOWN_TABLE, request->tab[2], fct);
-		return;
-	}
-
-	for(i = 0; i < t->nbTuple; i++)
-	{
-		tuple = NULL;
-		length = 0;
-		for (j = 0; j < t->nbColumn; j++)
+		if (! (t = getTableByName(db, request->tab[2])) )
 		{
-			char buffer[1000], *tmp;
-
-			Data *d = t->tuples[i]->datas[j];
-
-			if (d->type == INT)
-				sprintf(buffer, "%d",d->value.integer);
-			else
-				sprintf(buffer, "%s", d->value.str);
-
-			length += strlen(buffer) + (j + 1 == t->nbColumn ? 0 : 1);
-
-			tmp = realloc(tuple, sizeof(char) * (length + 1));
-
-			if (tmp == NULL)
-			{
-				free(tuple);
-				return;
-			}
-
-			if (tuple == NULL)
-				tmp[0] = '\0';
-
-			tuple = tmp;
-
-			strcat(tuple, buffer);
-
-			if ((j + 1) != t->nbColumn)
-				strcat(tuple, " ");
+			disp_classic_error(UNKNOWN_TABLE, request->tab[2], fct);
+			return;
 		}
-		if (tuple != NULL)
+
+		for(i = 0; i < t->nbTuple; i++)
 		{
+			char *tuple = (char*)tupleToString(t->tuples[i]);
 			fct(tuple);
 			free(tuple);
 		}
-	}
 
-	fct("OK");
+		fct("OK");
+	}
+	else if (isCP(request->tab[2]) == -1)
+		disp_classic_error("ERR: INVALID SYNTHAX ", request->tab[2], fct);
+	else
+	{
+		StringVector* vec = splitCartesianProduct(request->tab[2]);
+
+		if (vec == NULL)
+			return;
+
+		char* cart = getCartesianProduct(db, vec, fct);
+
+		if (cart != NULL)
+			fct(cart);
+
+		free(cart);
+		deleteStringVector(vec);
+	}
 }
 
